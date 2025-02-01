@@ -1,0 +1,11 @@
+Criar o .env.example no final
+
+Usar o git no final
+
+Bloquear acesso a procurar diretórios
+
+Como usar os difrentes ambientes de desenvolvimento no composer
+
+Relembrar os 4 pilares da OO
+
+Ver short tags do php
