@@ -37,7 +37,7 @@ class LoadView {
         // Se o caminho/view existir, inclua na página.
         if(file_exists($this->pathView)) {
             // Define a variável que será usada para acessar os dados na view (fiz isso para não precisar usar o "$this->" dentro de uma view).
-            $dataInView = $this->data;
+            $data = $this->data;
 
             // Incluir a view dentro da página/requisição.
             include $this->pathView;

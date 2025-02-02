@@ -1,3 +1,7 @@
+<?php
+// Essa view corresponde à página produtos/index do site.
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -8,20 +12,18 @@
 <body>
     <h1>Lista de produtos:</h1>
     <?php
-
-        foreach($dataInView['products'] as $product) {
-            extract($product);
+        foreach($data['products'] as $product) {
             ?>
-            <p>ID: <?php echo $id; ?></p>
-            <p>ID do Usuário: <?php echo $user_id; ?></p>
-            <p>Nome: <?php echo $name; ?></p>
-            <p>Código: <?php echo $code; ?></p>
-            <p>Quantidade: <?php echo $quantity; ?></p>
+            <p>ID: <?php echo $product['id']; ?></p>
+            <p>ID do Usuário: <?php echo $product['user_id']; ?></p>
+            <p>Nome: <?php echo $product['name']; ?></p>
+            <p>Código: <?php echo $product['code']; ?></p>
+            <p>Quantidade: <?php echo $product['quantity']; ?></p>
             <hr>
             <?php
         }
     ?>
 
-    <p>Total de <?php echo count($dataInView['products']); ?> produtos!</p>
+    <p>Total de <?php echo count($data['products']); ?> produtos!</p>
 </body>
 </html>

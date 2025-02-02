@@ -1,3 +1,7 @@
+<?php
+// Essa view corresponde à página inicial do site.
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
