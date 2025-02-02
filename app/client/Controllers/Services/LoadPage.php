@@ -26,13 +26,15 @@ class loadPage {
     /** Guarda a lista controllers (páginas) disponíveis. @var array */
     private array $listPublicPages = [
         "Home",
-        "Produtos"
+        "Produtos",
+        "CadastrarUsuario"
     ];
 
     /** Guarda a lista de pastas de controllers disponíveis. @var array */
     private array $listDirectories = [
         "home",
-        "produtos"
+        "produtos",
+        "users"
     ];
 
     /**
