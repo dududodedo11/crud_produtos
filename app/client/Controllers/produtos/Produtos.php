@@ -5,7 +5,7 @@ namespace Client\Controllers\produtos;
 use Client\Controllers\Services\Controller;
 use Client\Models\Product;
 
-class Produtos extends Controller {
+final class Produtos extends Controller {
     public function index(string|null $parameter) {
         if($parameter) {
 
@@ -13,7 +13,7 @@ class Produtos extends Controller {
             $productModel = new Product;
             $products = $productModel->all();
     
-            $this->loadView("produtos.index", ['products' => $products]);
+            $this->view("produtos.index", ['products' => $products]);
         }
 
     }
