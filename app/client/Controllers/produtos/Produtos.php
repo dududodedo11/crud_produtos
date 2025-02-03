@@ -15,7 +15,7 @@ final class Produtos extends Controller {
     public function index(string|null $parameter) {
         // Se um parâmetro (id) for passado, apresentar o produto específico.
         if($parameter) {
-
+            // !!
         } else {
             $productModel = new Product;
             $products = $productModel->all();

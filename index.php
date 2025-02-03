@@ -3,6 +3,8 @@
 use Client\Controllers\Services\PageController;
 use Dotenv\Dotenv;
 
+session_start();
+
 // Iniciando o composer.
 require "./vendor/autoload.php";
 
