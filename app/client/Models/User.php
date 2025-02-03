@@ -5,9 +5,9 @@ namespace Client\Models;
 // Define o nome da Model (usado no momento de salvar logs).
 define("MODEL_NAME", "User.php");
 
-use Client\Models\Services\Model;
 use PDO;
 use PDOException;
+use Client\Models\Services\Model;
 
 final class User extends Model {
         /**
@@ -19,7 +19,7 @@ final class User extends Model {
         // Tentativa de consulta com try-catch.
         try {
             // Fazendo consulta PDO.
-            $query = "SELECT id, username FROM users";
+            $query = "SELECT (id, username) FROM users";
             $stmt = $this->getConnection()->prepare($query);
             $stmt->execute();
     
@@ -29,5 +29,28 @@ final class User extends Model {
             // Gera um log sério de erro na consulta SQL.
             $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), null);
         }
+        
+    }
+
+    public function create(array $dataUser):bool {
+        $passwordWithHash = password_hash($dataUser['password'], PASSWORD_DEFAULT);
+
+        try {
+            $query = "INSERT INTO users (username, password) VALUES (:username, :password)";
+            $stmt = $this->getConnection()->prepare($query);
+
+
+            $stmt->bindValue(":username", $dataUser['username'], PDO::PARAM_STR);
+            $stmt->bindValue(":password", $passwordWithHash, PDO::PARAM_STR);
+
+            $stmt->execute();
+            
+            return true;
+        } catch (PDOException $e) {
+            $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), ['username' => $dataUser['username'], 'password' => $passwordWithHash]);
+            return false;
+        }
+
+        return false;
     }
 }

@@ -5,9 +5,9 @@ namespace Client\Models;
 // Define o nome da Model (usado no momento de salvar logs).
 define("MODEL_NAME", "Product.php");
 
-use Client\Models\Services\Model;
 use PDO;
 use PDOException;
+use Client\Models\Services\Model;
 
 final class Product extends Model {
     /**
@@ -29,5 +29,8 @@ final class Product extends Model {
             // Gera um log sério de erro na consulta SQL.
             $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), null);
         }
+
+        // Se chegou até aqui, retorne um array vazio, pois deu erro.
+        return [];
     }
 }

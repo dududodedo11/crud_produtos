@@ -22,11 +22,22 @@ use Client\Helpers\CSRF;
         <br>
 
         <label for="name">Crie uma senha</label>
-        <input type="passoword" placeholder="Crie sua senha" name="passoword">
+        <input type="password" placeholder="Crie sua senha" name="password">
 
         <br>
 
         <button type="submit">Cadastrar</button>
     </form>
+
+    <?php
+    // Se não for possível criar o usuário, imprima a mensagem de erro.
+    if(isset($_SESSION['create_users_response_error'])) {
+        unset($_SESSION['create_users_response_error']);
+
+        ?>
+        <p style="color: red;">Erro no cadastro, por favor, tente novamente</p>
+        <?php
+    }
+    ?>
 </body>
 </html>
