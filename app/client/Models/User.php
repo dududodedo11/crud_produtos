@@ -32,25 +32,40 @@ final class User extends Model {
         
     }
 
+    /**
+     * Insere um novo usuário no banco de dados.
+     *
+     * @param array $dataUser Recebe os dados enviados pelo usuário.
+     * @return boolean Retorna se foi cadastrado com sucesso.
+     */
     public function create(array $dataUser):bool {
+        // Cria uma variável para guardar a senha criptografada.
         $passwordWithHash = password_hash($dataUser['password'], PASSWORD_DEFAULT);
 
+        // Tentativa de consulta com try-catch.
         try {
+            // Criando a query e preparando ela.
             $query = "INSERT INTO users (username, password) VALUES (:username, :password)";
             $stmt = $this->getConnection()->prepare($query);
 
-
+            // Nomeando os valores da query.
             $stmt->bindValue(":username", $dataUser['username'], PDO::PARAM_STR);
             $stmt->bindValue(":password", $passwordWithHash, PDO::PARAM_STR);
 
+            // Executando a query.
             $stmt->execute();
             
+            // Se chegou até aqui, quer dizer que funcionou, retorne true.
             return true;
         } catch (PDOException $e) {
+            // Gera um log sério de erro na consulta SQL.
             $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), ['username' => $dataUser['username'], 'password' => $passwordWithHash]);
+
+            // Se chegou até aqui, quer dizer que não funcionou, retorne false.
             return false;
         }
 
+        // Se chegou até aqui, quer dizer que não funcionou, retorne false.
         return false;
     }
 }
