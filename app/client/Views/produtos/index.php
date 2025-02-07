@@ -7,9 +7,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php $view->callHeader("basic") ?>
     <title>Produtos - Início</title>
 </head>
 <body>
+    <?php $view->component("navbar") ?>
     <h1>Lista de produtos:</h1>
     <?php
         foreach($data['products'] as $product) {

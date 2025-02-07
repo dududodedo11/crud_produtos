@@ -3,6 +3,7 @@
 namespace Client\Views\Services;
 
 use Client\Helpers\GenerateLog;
+use Client\Views\Services\View;
 
 class LoadView {
     private string $pathView;
@@ -24,7 +25,7 @@ class LoadView {
         $this->nameView = str_replace(".", "/", $this->nameView);
 
         // Define o path completo da view desejada.
-        $this->pathView = "app/client/Views/$this->nameView.php";
+        $this->pathView = "app/client/Views/{$this->nameView}.php";
     }
 
     /**
@@ -38,6 +39,7 @@ class LoadView {
         if(file_exists($this->pathView)) {
             // Define a variável que será usada para acessar os dados na view (fiz isso para não precisar usar o "$this->" dentro de uma view).
             $data = $this->data;
+            $view = new View;
 
             // Incluir a view dentro da página/requisição.
             include $this->pathView;
