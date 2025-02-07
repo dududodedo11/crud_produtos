@@ -18,6 +18,7 @@
     <p style="color: green"><?php echo $_SESSION['create_users_response_success'] ?? "" ?></p>
 
     <?php
+    // Destruir todas as variáveis de sessão de mensagens.
     unset($_SESSION['create_users_response_success']);
     ?>
 </body>
