@@ -69,7 +69,7 @@ final class CadastrarUsuario extends Controller {
 
                     if($response) {
                         // Redirecionar para a página home, com mensagem de sucesso.
-                        $_SESSION['create_users_response_success'] = true;
+                        $_SESSION['create_users_response_success'] = "Usuário cadastrado com sucesso!";
                         header("Location: {$_ENV['APP_URL']}");
                     } else {
                         // Redirecionar novamente para o cadastrar-usuario, com mensagem de erro.
