@@ -17,27 +17,33 @@ use Client\Helpers\CSRF;
         <input type="hidden" name="csrf_token" value="<?php echo CSRF::generateCSRFToken("form_create_users") ?>">
 
         <label for="username">Nome de usuário</label>
-        <input type="text" placeholder="Crie seu nome de usuário" name="username">
+        <input type="text" placeholder="Crie seu nome de usuário" name="username"
+        value="<?php echo $_SESSION['create_users_response_invalid_form']['form']['username'] ?? "" ?>">
+        
+        <p><?php echo $_SESSION['create_users_response_invalid_form']['errors']['username'] ?? "" ?></p>
 
         <br>
 
         <label for="name">Crie uma senha</label>
-        <input type="password" placeholder="Crie sua senha" name="password">
+        <input type="password" placeholder="Crie sua senha" name="password"
+        value="<?php echo $_SESSION['create_users_response_invalid_form']['form']['password'] ?? "" ?>">
+
+        <p><?php echo $_SESSION['create_users_response_invalid_form']['errors']['password'] ?? "" ?></p>
 
         <br>
 
         <button type="submit">Cadastrar</button>
     </form>
 
+    <p><?php echo $_SESSION['create_users_response_error'] ?? "" ?></p>
+
     <?php
     // Se não for possível criar o usuário, imprima a mensagem de erro.
-    if(isset($_SESSION['create_users_response_error'])) {
-        unset($_SESSION['create_users_response_error']);
+    var_dump($_SESSION['create_users_response_invalid_form'] ?? []);
 
-        ?>
-        <p style="color: red;">Erro no cadastro, por favor, tente novamente</p>
-        <?php
-    }
+    // Destruir todas as variáveis de sessão para erros.
+    unset($_SESSION['create_users_response_error']);
+    unset($_SESSION['create_users_response_invalid_form']);
     ?>
 </body>
 </html>

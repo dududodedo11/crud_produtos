@@ -1,5 +1,3 @@
-Bloquear acesso a procurar diretórios
-
 Como usar os difrentes ambientes de desenvolvimento no composer
 
 Ver short tags do php

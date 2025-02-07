@@ -1,7 +1,53 @@
 RewriteEngine On
 
+<IfModule mod_rewrite.c>    
+    RewriteCond %{QUERY_STRING} (\<|%3C|%3E|%00|%3B) [NC,OR]
+    RewriteCond %{QUERY_STRING} (union.*select|base64_encode|/etc/passwd) [NC]
+    RewriteRule .* - [F]
+</IfModule>
+
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-l
 
 RewriteRule ^(.*)$ index.php?url=$1 [L]
+
+Options -Indexes
+
+RewriteRule ^app/ - [F]
+RewriteRule ^db/ - [F]
+RewriteRule ^logs/ - [F]
+RewriteRule ^vendor/ - [F]
+RewriteRule ^lang/ - [F]
+
+<FilesMatch "^\.gitignore$">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "^\.htaccess$">
+Require all denied
+</FilesMatch>
+
+<FilesMatch "^\.env$">
+Require all denied
+</FilesMatch>
+
+<FilesMatch "^\.env\.example$">
+Require all denied
+</FilesMatch>
+
+<FilesMatch "^composer.json$">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "^composer.lock$">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "^A FAZER.txt$">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "^phinx.php$">
+    Require all denied
+</FilesMatch>

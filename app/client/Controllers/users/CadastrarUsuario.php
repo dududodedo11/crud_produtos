@@ -3,8 +3,10 @@
 namespace Client\Controllers\users;
 
 use Client\Controllers\Services\Controller;
+use Client\Controllers\Services\UniqueRuleRakit;
 use Client\Models\User;
 use Client\Helpers\CSRF;
+use Rakit\Validation\Validator;
 
 final class CadastrarUsuario extends Controller {
     /**
@@ -31,26 +33,61 @@ final class CadastrarUsuario extends Controller {
             // Receber todos os dados POST, incluindo o formulário.
             $dataForm = filter_input_array(INPUT_POST, FILTER_DEFAULT);
 
-            // Se existir um token no formulário, ele vaalida se está correto.
+            // Se existir um token no formulário, ele valida se está correto.
             if($dataForm['csrf_token'] && CSRF::validateCSRFToken("form_create_users", $dataForm['csrf_token'])) {
-                // Instanciar a controller users.
-                $user = new User;
+                // Instanciar a validação (rakit).
+                $validator = new Validator;
 
-                // Chamar o método para criar um novo usuário.
-                $response = $user->create($dataForm);
+                // Adicionar a regra Unique às opções.
+                $validator->addValidator("unique", new UniqueRuleRakit());
 
-                if($response) {
-                    // Redirecionar para a página home, com mensagem de sucesso.
-                    $_SESSION['create_users_response_success'] = true;
-                    header("Location: {$_ENV['APP_URL']}");
+                // Mudar linguagem das mensagens para português.
+                $validator->setMessages(require "lang/pt.php");
+
+                // Montar a validação.
+                $validation = $validator->make($dataForm, [
+                    "username" => "required|min:5|max:80|unique:users,username",
+                    "password" => "required|min:8|max:80"
+                ]);
+
+                // Trocar os nomes de campos para o desejado.
+                $validation->setAliases([
+                    "username" => "nome de usuário",
+                    "password" => "senha"
+                ]);
+
+                // Fazer a validação.
+                $validation->validate();
+
+                // Se não houver falhas, continua o processo.
+                if(!$validation->fails()) {
+                    // Instanciar a controller users.
+                    $user = new User;
+
+                    // Chamar o método para criar um novo usuário.
+                    $response = $user->create($dataForm);
+
+                    if($response) {
+                        // Redirecionar para a página home, com mensagem de sucesso.
+                        $_SESSION['create_users_response_success'] = true;
+                        header("Location: {$_ENV['APP_URL']}");
+                    } else {
+                        // Redirecionar novamente para o cadastrar-usuario, com mensagem de erro.
+                        $_SESSION['create_users_response_error'] = "Erro na criação do usuário, por favor, tente novamente mais tarde";
+                        header("Location: {$_ENV['APP_URL']}cadastrar-usuario");
+                    }
                 } else {
-                    // Redirecionar novamente para o cadastrar-usuario, com mensagem de erro.
-                    $_SESSION['create_users_response_error'] = false;
+                    // Se a validação falhou, crie uma Sessão com as informções de formulário e erros.
+                    $_SESSION['create_users_response_invalid_form'] = ["form" => $dataForm, "errors" => $validation->errors()->firstOfAll()];
+
+                    // Redirecionar novamente à página Cadastrar Usuário.
                     header("Location: {$_ENV['APP_URL']}cadastrar-usuario");
                 }
+            } else {
+                // Token CSRF inválido.
             }
         } else {
-            // (Redirecionar para alguma mensagem de erro).
+            // (Redirecionar para alguma mensagem de erro 404).
             die("Página não encontrada (Verbo HTTP errado)");
         }
     }
