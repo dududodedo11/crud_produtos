@@ -39,7 +39,7 @@ use Client\Helpers\CSRF;
 
     <?php
     // Se não for possível criar o usuário, imprima a mensagem de erro.
-    var_dump($_SESSION['create_users_response_invalid_form'] ?? []);
+    // var_dump($_SESSION['create_users_response_invalid_form'] ?? []);
 
     // Destruir todas as variáveis de sessão para erros.
     unset($_SESSION['create_users_response_error']);
