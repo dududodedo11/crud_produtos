@@ -39,7 +39,7 @@ final class CadastrarUsuario extends Controller {
                 $validator = new Validator;
 
                 // Adicionar a regra Unique às opções.
-                $validator->addValidator("unique", new UniqueRuleRakit());
+                $validator->addValidator("unique", new UniqueRuleRakit);
 
                 // Mudar linguagem das mensagens para português.
                 $validator->setMessages(require "lang/pt.php");

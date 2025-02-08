@@ -68,4 +68,23 @@ final class User extends Model {
         // Se chegou até aqui, quer dizer que não funcionou, retorne false.
         return false;
     }
+
+    public function getUser(string $username):array|bool {
+        try {
+            $query = "SELECT (id, username, password) FROM users WHERE username = :username";
+            $stmt = $this->getConnection()->prepare($query);
+
+            $stmt->bindValue(":username", $username, PDO::PARAM_STR);
+
+            $stmt->execute();
+
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $user;
+        } catch(PDOException $e) {
+            $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), ['username' => $username]);
+
+            return false;
+        }
+    }
 }

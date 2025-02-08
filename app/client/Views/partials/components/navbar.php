@@ -10,4 +10,5 @@ $view = new View;
     <li><a href="<?php echo $view->linkPage("home") ?>">Página Inicial</a></li>
     <li><a href="<?php echo $view->linkPage("cadastrar-usuario") ?>">Cadastrar Usuário</a></li>
     <li><a href="<?php echo $view->linkPage("produtos") ?>">Produtos</a></li>
+    <li><a href="<?php echo $view->linkPage("login") ?>">Login</a></li>
 </ul>
