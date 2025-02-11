@@ -14,6 +14,8 @@ use Client\Helpers\CSRF;
 </head>
 <body>
     <?php $view->component("navbar") ?>
+    <p style="color: green"><?php echo $_SESSION['create_users_response_success'] ?? "" ?></p>
+
     <form action="login/login" method="POST">
         <input type="hidden" name="csrf_token" value="<?php echo CSRF::generateCSRFToken("form_login") ?>">
 
@@ -27,5 +29,15 @@ use Client\Helpers\CSRF;
 
         <button type="submit">Entrar</button>
     </form>
+
+    <?php
+
+    var_dump($_SESSION['login_users_response_invalid_form'] ?? []);
+    var_dump($_SESSION['login_users_response_incorrect_form'] ?? []);
+
+    unset($_SESSION['login_users_response_invalid_form']);
+    unset($_SESSION['login_users_response_incorrect_form']);
+
+    ?>
 </body>
 </html>

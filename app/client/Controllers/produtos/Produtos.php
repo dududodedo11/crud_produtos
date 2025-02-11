@@ -3,9 +3,14 @@
 namespace Client\Controllers\produtos;
 
 use Client\Controllers\Services\Controller;
+use Client\Middlewares\VerifyLogin;
 use Client\Models\Product;
 
 final class Produtos extends Controller {
+    public function __construct() {
+        VerifyLogin::redirect();
+    }
+
     /**
      * Função correspondente a produtos/index ou produtos/{id}.
      *

@@ -5,10 +5,17 @@ namespace Client\Controllers\users;
 use Client\Controllers\Services\Controller;
 use Client\Controllers\Services\UniqueRuleRakit;
 use Client\Helpers\CSRF;
+use Client\Middlewares\VerifyLogin;
 use Client\Models\User;
 use Rakit\Validation\Validator;
 
 class Login extends Controller {
+    public function __construct() {
+        if(!VerifyLogin::verify()) {
+            header("Location {$_ENV['APP_URL']}");
+        }
+    }
+
     public function index(string|null $parameter) {
         $this->view("users.login", null);
     }
@@ -17,7 +24,7 @@ class Login extends Controller {
         if($_SERVER['REQUEST_METHOD'] == "POST") {
             $dataForm = filter_input_array(INPUT_POST, FILTER_DEFAULT);
 
-            if($dataForm['csrf_token'] && CSRF::validateCSRFToken("form_create_users", $dataForm['csrf_token'])) {
+            if($dataForm['csrf_token'] && CSRF::validateCSRFToken("form_login", $dataForm['csrf_token'])) {
                 $validator = new Validator;
 
                 // Adicionar a regra Unique às opções.
@@ -44,10 +51,14 @@ class Login extends Controller {
 
                     $response = $user->getUser($dataForm['username']);
 
+                    echo "teste";
+
                     if($response) {
                         if(password_verify($dataForm['password'], $response['password'])) {
                             $_SESSION['user_logged']['id'] = $response['id'];
                             $_SESSION['user_logged']['username'] = $response['username'];
+
+                            header("Location: {$_ENV['APP_URL']}");
                         }
                     } else {
                         $_SESSION['login_users_response_incorrect_form'] = "Usuário/Senha inválido";
@@ -63,11 +74,21 @@ class Login extends Controller {
                 }
             } else {
                 // Token CSRF inválido.
+                die("TOKEN CSRF INVÁLIDO");
             }
         } else {
             // (Redirecionar para alguma mensagem de erro 404).
             die("Página não encontrada (Verbo HTTP errado)");
         }
 
+    }
+
+    public function delete(string|null $parameter) {
+        if($_SERVER['REQUEST_METHOD'] == "POST") {
+            unset($_SESSION['user_logged']);
+            header("Location: {$_ENV['APP_URL']}");
+        } else {
+            die("Página não encontrada");
+        }
     }
 }

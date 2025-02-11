@@ -6,9 +6,16 @@ use Client\Controllers\Services\Controller;
 use Client\Controllers\Services\UniqueRuleRakit;
 use Client\Models\User;
 use Client\Helpers\CSRF;
+use Client\Middlewares\VerifyLogin;
 use Rakit\Validation\Validator;
 
 final class CadastrarUsuario extends Controller {
+    public function __construct() {
+        if(VerifyLogin::verify()) {
+            header("Location: {$_ENV['APP_URL']}");
+        }
+    }
+
     /**
      * Função correspondente a página cadastrar-usuario.
      * Apresenta a página para cadastro.
@@ -69,8 +76,8 @@ final class CadastrarUsuario extends Controller {
 
                     if($response) {
                         // Redirecionar para a página home, com mensagem de sucesso.
-                        $_SESSION['create_users_response_success'] = "Usuário cadastrado com sucesso!";
-                        header("Location: {$_ENV['APP_URL']}");
+                        $_SESSION['create_users_response_success'] = "Usuário cadastrado com sucesso, por favor, entre na sua conta!";
+                        header("Location: {$_ENV['APP_URL']}login");
                     } else {
                         // Redirecionar novamente para o cadastrar-usuario, com mensagem de erro.
                         $_SESSION['create_users_response_error'] = "Erro na criação do usuário, por favor, tente novamente mais tarde";

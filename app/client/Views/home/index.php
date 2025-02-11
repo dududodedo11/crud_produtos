@@ -15,7 +15,19 @@
     <h1>Bem-vindo ao site!</h1>
     <p>Página Home</p>
 
-    <p style="color: green"><?php echo $_SESSION['create_users_response_success'] ?? "" ?></p>
+    <?php
+    if(isset($_SESSION['user_logged'])) {
+        ?>
+        <p style="color: blue">Olá, <?php echo $_SESSION['user_logged']['username'] ?></p>
+
+        <form action="login/delete" method="POST">
+            <button type="submit">Sair da conta</button>
+        </form>
+        <?php
+    }
+    ?>
+
+
 
     <?php
     // Destruir todas as variáveis de sessão de mensagens.
