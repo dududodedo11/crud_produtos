@@ -2,3 +2,5 @@ vendor
 .env
 /logs/*
 !/logs/empty
+node_modules
+package-lock.json
