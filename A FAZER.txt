@@ -1,5 +1,3 @@
 Como usar os difrentes ambientes de desenvolvimento no composer
 
 Ver short tags do php
-
-Como usar o PASSWORD_ARGON2ID nos users

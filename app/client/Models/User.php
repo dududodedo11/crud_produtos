@@ -40,7 +40,7 @@ final class User extends Model {
      */
     public function create(array $dataUser):bool {
         // Cria uma variável para guardar a senha criptografada.
-        $passwordWithHash = password_hash($dataUser['password'], PASSWORD_DEFAULT);
+        $passwordWithHash = password_hash($dataUser['password'], PASSWORD_ARGON2ID);
 
         // Tentativa de consulta com try-catch.
         try {

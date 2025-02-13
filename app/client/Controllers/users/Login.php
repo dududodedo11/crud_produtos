@@ -11,20 +11,20 @@ use Rakit\Validation\Validator;
 
 class Login extends Controller {
     public function __construct() {
-        if(!VerifyLogin::verify()) {
-            header("Location {$_ENV['APP_URL']}");
+        if(VerifyLogin::verify()) {
+            header("Location: {$_ENV['APP_URL']}");
         }
     }
 
     public function index(string|null $parameter) {
         $this->view("users.login", null);
     }
-
+    
     public function login(string|null $parameter) {
         if($_SERVER['REQUEST_METHOD'] == "POST") {
             $dataForm = filter_input_array(INPUT_POST, FILTER_DEFAULT);
 
-            if($dataForm['csrf_token'] && CSRF::validateCSRFToken("form_login", $dataForm['csrf_token'])) {
+            if(isset($dataForm['csrf_token']) && CSRF::validateCSRFToken("form_login", $dataForm['csrf_token'] ?? [])) {
                 $validator = new Validator;
 
                 // Adicionar a regra Unique às opções.
@@ -51,17 +51,21 @@ class Login extends Controller {
 
                     $response = $user->getUser($dataForm['username']);
 
-                    echo "teste";
-
                     if($response) {
                         if(password_verify($dataForm['password'], $response['password'])) {
                             $_SESSION['user_logged']['id'] = $response['id'];
                             $_SESSION['user_logged']['username'] = $response['username'];
 
                             header("Location: {$_ENV['APP_URL']}");
+                        } else {
+                            $_SESSION['login_users_response_incorrect_form'] = "Usuário/Senha inválido";
+                            $_SESSION['login_users_response_invalid_form']['form'] = $dataForm;
+                            // Redirecionar novamente à página Login.
+                            header("Location: {$_ENV['APP_URL']}login");
                         }
                     } else {
                         $_SESSION['login_users_response_incorrect_form'] = "Usuário/Senha inválido";
+                        $_SESSION['login_users_response_invalid_form']['form'] = $dataForm;
                         // Redirecionar novamente à página Login.
                         header("Location: {$_ENV['APP_URL']}login");
                     }
@@ -83,6 +87,12 @@ class Login extends Controller {
 
     }
 
+    /**
+     * Faz o logout do usuário.
+     *
+     * @param string|null $parameter É o ID que pode vir na URL.
+     * @return void
+     */
     public function delete(string|null $parameter) {
         if($_SERVER['REQUEST_METHOD'] == "POST") {
             unset($_SESSION['user_logged']);

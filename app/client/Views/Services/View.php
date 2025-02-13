@@ -41,4 +41,16 @@ class View {
 
         return $urlPage;
     }
+
+    /**
+     * Usada para obter o link de um arquivo public.
+     *
+     * @param string $asset Recebe o caminho/URL do arquivo (em pontos).
+     * @return string Retorna o link absoluto.
+     */
+    public function linkAsset(string $asset):string {
+        $pathAsset = $_ENV['APP_URL'] . "public/" . $asset;
+
+        return $pathAsset;
+    }
 }

@@ -41,7 +41,7 @@ final class CadastrarUsuario extends Controller {
             $dataForm = filter_input_array(INPUT_POST, FILTER_DEFAULT);
 
             // Se existir um token no formulário, ele valida se está correto.
-            if($dataForm['csrf_token'] && CSRF::validateCSRFToken("form_create_users", $dataForm['csrf_token'])) {
+            if(isset($dataForm['csrf_token']) && CSRF::validateCSRFToken("form_create_users", $dataForm['csrf_token'])) {
                 // Instanciar a validação (rakit).
                 $validator = new Validator;
 
@@ -92,6 +92,7 @@ final class CadastrarUsuario extends Controller {
                 }
             } else {
                 // Token CSRF inválido.
+                die("TOKEN CSRF INVÁLIDO");
             }
         } else {
             // (Redirecionar para alguma mensagem de erro 404).

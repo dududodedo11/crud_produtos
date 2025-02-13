@@ -11,7 +11,7 @@ class UsersSeeder extends AbstractSeed
         $data = [
             [
                 'username' => "dududodedo11",
-                'password' => password_hash("1234", PASSWORD_DEFAULT)
+                'password' => password_hash("1234", PASSWORD_ARGON2ID)
             ]
         ];
 
