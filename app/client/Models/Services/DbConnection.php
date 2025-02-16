@@ -2,6 +2,7 @@
 
 namespace Client\Models\Services;
 
+use Client\Helpers\ErrorPage;
 use PDO;
 use PDOException;
 use Client\Helpers\GenerateLog;
@@ -57,6 +58,8 @@ abstract class DbConnection {
         } catch (PDOException $e) {
             // Caso a conexão não seja bem sucedida, gerar um log de emergência, pois o banco de dados não está conectado.
             GenerateLog::generateLog("emergency", "Erro na conexão do banco de dados: " . $e->getMessage(), ["dbHost" => $this->dbHost, "dbPort" => $this->dbPort, "dbName" => $this->dbName, "dbUser" => $this->dbUser, "dbPassword" => $this->dbPassword]);
+
+            ErrorPage::error500();
         }
     }
 }

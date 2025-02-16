@@ -5,6 +5,7 @@ namespace Client\Controllers\users;
 use Client\Controllers\Services\Controller;
 use Client\Controllers\Services\UniqueRuleRakit;
 use Client\Helpers\CSRF;
+use Client\Helpers\ErrorPage;
 use Client\Middlewares\VerifyLogin;
 use Client\Models\User;
 use Rakit\Validation\Validator;
@@ -78,13 +79,15 @@ class Login extends Controller {
                 }
             } else {
                 // Token CSRF inválido.
-                die("TOKEN CSRF INVÁLIDO");
+                $_SESSION['login_users_response_incorrect_form'] = "Erro de segurança do formulário, por favor, recarregue a página e tente novamente";
+                $_SESSION['login_users_response_invalid_form']['form'] = $dataForm;
+                // Redirecionar novamente à página Login.
+                header("Location: {$_ENV['APP_URL']}login");
             }
         } else {
-            // (Redirecionar para alguma mensagem de erro 404).
-            die("Página não encontrada (Verbo HTTP errado)");
+            // Redirecionar para página de erro 404.
+            ErrorPage::error404("Página não encontrada");
         }
-
     }
 
     /**
@@ -98,7 +101,8 @@ class Login extends Controller {
             unset($_SESSION['user_logged']);
             header("Location: {$_ENV['APP_URL']}");
         } else {
-            die("Página não encontrada");
+            // Redirecionar para página de erro 404.
+            ErrorPage::error404("Página não encontrada");
         }
     }
 }

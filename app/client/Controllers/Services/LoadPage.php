@@ -2,6 +2,7 @@
 
 namespace Client\Controllers\Services;
 
+use Client\Helpers\ErrorPage;
 use Client\Helpers\GenerateLog;
 
 /**
@@ -62,8 +63,8 @@ class loadPage {
             ]);
             
             // Matar a requisição aqui.
-            // !!! (Depois, fazer uma página melhor).
-            die("Página não encontrada (1)"); // Erro 404?
+            // Redirecionar para página de erro 404.
+            ErrorPage::error404("Página {$_SERVER['REQUEST_URI']} não encontrada");
         }
 
         // Verifica se a controller da página requisitada existe.
@@ -76,8 +77,8 @@ class loadPage {
             ]);
 
             // Matar a requisição aqui.
-            // !!! (Depois, fazer uma página melhor).
-            die("Página não encontrada (2)"); // Erro 404 ou 500?
+            // Redirecionar para página de erro 404.
+            ErrorPage::error404("Página {$_SERVER['REQUEST_URI']} não encontrada");
         }
 
         // Chama a função que instancia a controller.
@@ -103,9 +104,8 @@ class loadPage {
             "urlId" => $this->urlId
             ]);
 
-            // Matar a requisição aqui.
-            // !!! (Depois, fazer uma página melhor).
-            die("Página não encontrada (3)");
+            // Redirecionar para página de erro 404.
+            ErrorPage::error404("Página {$_SERVER['REQUEST_URI']} não encontrada");
         }
     }
 

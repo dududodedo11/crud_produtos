@@ -2,6 +2,7 @@
 
 namespace Client\Models\Services;
 
+use Client\Helpers\ErrorPage;
 use Client\Helpers\GenerateLog;
 use PDO;
 use PDOException;
@@ -34,9 +35,8 @@ class UniqueRule extends Model {
             // Gera um log de erro, pois não foi fossivel consultar o DB com as informações passadas.
             GenerateLog::generateLog("error", "Erro na consulta de valor único", ['query' => $query, 'table' => $table, 'column' => $column, 'value' => $value]);
 
-            // Redirecinar para alguma página de erro (500 ?).
-            http_response_code(500);
-            header("Location: {$_ENV['APP_URL']}");
+            // Redirecinar para erro 500.
+            ErrorPage::error500();
         }
     }
 }

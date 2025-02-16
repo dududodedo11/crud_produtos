@@ -6,6 +6,7 @@ use Client\Controllers\Services\Controller;
 use Client\Controllers\Services\UniqueRuleRakit;
 use Client\Models\User;
 use Client\Helpers\CSRF;
+use Client\Helpers\ErrorPage;
 use Client\Middlewares\VerifyLogin;
 use Rakit\Validation\Validator;
 
@@ -91,12 +92,13 @@ final class CadastrarUsuario extends Controller {
                     header("Location: {$_ENV['APP_URL']}cadastrar-usuario");
                 }
             } else {
-                // Token CSRF inválido.
-                die("TOKEN CSRF INVÁLIDO");
+                // Redirecionar novamente para o cadastrar-usuario, com mensagem de erro.
+                $_SESSION['create_users_response_error'] = "Erro de segurança do formulário, por favor, recarregue a página e tente novamente";
+                header("Location: {$_ENV['APP_URL']}cadastrar-usuario");
             }
         } else {
-            // (Redirecionar para alguma mensagem de erro 404).
-            die("Página não encontrada (Verbo HTTP errado)");
+            // Redirecionar para página de erro 404.
+            ErrorPage::error404("Página não encontrada"); 
         }
     }
 }

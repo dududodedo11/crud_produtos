@@ -60,13 +60,7 @@ final class User extends Model {
         } catch (PDOException $e) {
             // Gera um log sério de erro na consulta SQL.
             $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), ['username' => $dataUser['username'], 'password' => $passwordWithHash]);
-
-            // Se chegou até aqui, quer dizer que não funcionou, retorne false.
-            return false;
         }
-
-        // Se chegou até aqui, quer dizer que não funcionou, retorne false.
-        return false;
     }
 
     public function getUser(string $username):array|bool {
@@ -83,8 +77,6 @@ final class User extends Model {
             return $user;
         } catch(PDOException $e) {
             $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), ['username' => $username]);
-
-            return false;
         }
     }
 }

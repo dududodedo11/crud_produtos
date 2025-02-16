@@ -2,6 +2,7 @@
 
 namespace Client\Models\Services;
 
+use Client\Helpers\ErrorPage;
 use Client\Helpers\GenerateLog;
 use Client\Models\Services\DbConnection;
 
@@ -21,5 +22,7 @@ abstract class Model extends DbConnection {
      */
     public function generateBasicLog(string $model, string $query, string $pdoException, array|string|null $optional):void {
         GenerateLog::generateLog("critical", "Erro na consulta SQL (Model: $model)", ["query" => $query, "PDOException" => $pdoException, "Outros dados" => $optional]);
+
+        ErrorPage::error500();
     }
 }
