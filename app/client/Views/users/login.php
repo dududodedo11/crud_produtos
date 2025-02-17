@@ -24,11 +24,13 @@ use Client\Helpers\CSRF;
         <form action="login/login" method="POST" class="border border-1 p-3 rounded needs-validation">
             <h1 class="h3 fw-normal mb-3 text-center">Entre na sua conta</h1>
 
-            <input type="hidden" name="csrf_token" value="<?php echo CSRF::generateCSRFToken("form_login")?>">
+            <input type="hidden" name="csrf_token" value="<?php echo CSRF::generateCSRFToken("form_login") ?>">
+
+            <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($data['redirect']) ?>">
 
             <div class="mb-3">
                 <label for="usernameInput">Nome de usuário:</label>
-                <input type="text" name="username" id="usernameInput" placeholder="seu-email@exemplo.com" class="form-control <?php echo isset($_SESSION['login_users_response_invalid_form']['errors']['username']) ? 'is-invalid' : '' ?>" value="<?php echo $_SESSION['login_users_response_invalid_form']['form']['username'] ?? "" ?>">
+                <input type="text" name="username" id="usernameInput" placeholder="Insira seu nome de usuário" class="form-control <?php echo isset($_SESSION['login_users_response_invalid_form']['errors']['username']) ? 'is-invalid' : '' ?>" value="<?php echo $_SESSION['login_users_response_invalid_form']['form']['username'] ?? "" ?>">
                 <div class="invalid-feedback">
                     <?php echo $_SESSION['login_users_response_invalid_form']['errors']['username'] ?? "" ?>
                 </div>
@@ -57,12 +59,17 @@ use Client\Helpers\CSRF;
         <p class="text-success mt-1 text-center">
             <?php echo $_SESSION['create_users_response_success'] ?? "" ?>
         </p>
+
+        <p class="text-info mt-1 text-center">
+            <?php echo $_SESSION['login_users_required'] ?? "" ?>
+        </p>
     </main>
 
     <?php
     unset($_SESSION['login_users_response_invalid_form']);
     unset($_SESSION['login_users_response_incorrect_form']);
     unset($_SESSION['create_users_response_success']);
+    unset($_SESSION['login_users_required']);
     ?>
 
     <?php $view->component("bootstrapjs") ?>

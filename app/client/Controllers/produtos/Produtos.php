@@ -8,7 +8,8 @@ use Client\Models\Product;
 
 final class Produtos extends Controller {
     public function __construct() {
-        VerifyLogin::redirect();
+        $url = $_ENV['APP_URL'] . filter_input(INPUT_GET, "url", FILTER_SANITIZE_URL);
+        VerifyLogin::redirect($url);
     }
 
     /**

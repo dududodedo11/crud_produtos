@@ -11,10 +11,13 @@ class VerifyLogin {
      *
      * @return void
      */
-    public static function redirect():void {
+    public static function redirect(string $urlToRedirect):void {
+        // Transformar caracteres especiais em caracteres de url.
+        $urlToRedirect = urlencode($urlToRedirect);
+        
         // Se não existir a sessão de usuário logado, redirecione para a página de login.
         if(!isset($_SESSION['user_logged'])) {
-            header("Location: {$_ENV['APP_URL']}login?login=required");
+            header("Location: {$_ENV['APP_URL']}login?redirect={$urlToRedirect}");
         }
     }
 
