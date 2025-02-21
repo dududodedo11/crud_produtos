@@ -14,6 +14,7 @@ final class CreateProductsTable extends AbstractMigration
             ->addColumn("name", "string", ['null' => false])
             ->addColumn("quantity", "integer", ['null' => false, "signed" => false])
             ->addColumn("code", "string", ['null' => false])
+            ->addColumn("description", "text")
             ->addColumn("created_at", "timestamp", ["null" => false, "default" => "CURRENT_TIMESTAMP"])
             ->addColumn("updated_at", "timestamp", ["null" => false, "default" => "CURRENT_TIMESTAMP"])
 

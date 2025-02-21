@@ -27,5 +27,7 @@
     ?>
 
     <p>Total de <?php echo count($data['products']); ?> produtos!</p>
+
+    <?php $view->component("bootstrapjs") ?>
 </body>
 </html>

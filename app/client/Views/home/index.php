@@ -27,7 +27,7 @@
     }
     ?>
 
-
+    <?php $view->component("bootstrapjs") ?>
 
     <?php
     // Destruir todas as variáveis de sessão de mensagens.
