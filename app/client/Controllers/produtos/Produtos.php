@@ -28,7 +28,18 @@ final class Produtos extends Controller
     {
         // Se um parâmetro (id) for passado, apresentar o produto específico.
         if ($parameter) {
-            // !!
+            $parameter = filter_var($parameter, FILTER_SANITIZE_NUMBER_INT);
+
+            $productModel = new Product;
+            $product = $productModel->getById($parameter);
+
+            if($product) {
+                // Carregar a view de produtos/index com o produto específico.
+                $this->view("produtos.product", ['product' => $product]);
+            } else {
+                // Redirecionar para página de erro 404.
+                ErrorPage::error404("Página não encontrada");
+            }
         } else {
             $productModel = new Product;
             $products = $productModel->all();

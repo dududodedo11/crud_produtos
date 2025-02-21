@@ -2,8 +2,10 @@
 
 namespace Client\Views\Services;
 
+use Client\Helpers\ErrorPage;
 use Client\Helpers\GenerateLog;
 use Client\Views\Services\View;
+use Error;
 
 class LoadView {
     private string $pathView;
@@ -46,6 +48,9 @@ class LoadView {
         } else {
             // Caso o caminho/view não existir, gerar um log bem sério, porque a página em si existe, mas o caminho está incorreto.
             GenerateLog::generateLog("critical", "View não encontrada", ['nameView' => $this->nameView, 'pathView' => $this->pathView]);
+
+            // Redirecionar para a página de erro 500.
+            ErrorPage::error500("Erro interno do servidor");
         }
     }
 }
