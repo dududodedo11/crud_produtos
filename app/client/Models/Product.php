@@ -20,8 +20,11 @@ final class Product extends Model {
         // Tentativa de consulta com try-catch.
         try {
             // Fazendo consulta PDO.
-            $query = "SELECT id, user_id, name, code, quantity FROM products";
+            $query = "SELECT id, user_id, name, code, quantity FROM products WHERE user_id = :user_id";
             $stmt = $this->getConnection()->prepare($query);
+
+            $stmt->bindValue(':user_id', $_SESSION['user_logged']['id'], PDO::PARAM_INT);
+
             $stmt->execute();
     
             // Retorna um array associativo de todos os produtos.
