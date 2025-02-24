@@ -49,6 +49,8 @@ use Client\Helpers\CSRF;
             <button type="submit" class="btn rounded bg-primary w-100">Cadastrar</button>
         </form>
 
+        <p class="text-center mt-1">Já tem uma conta? <a href="<?php echo $view->linkPage("login") ?>">Faça o Login aqui</a>.</p>
+
         <p class="text-danger mt-1 text-center">
             <?php echo $_SESSION['create_users_response_error'] ?? "" ?>
         </p>

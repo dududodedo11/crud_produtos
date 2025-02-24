@@ -29,14 +29,16 @@ class loadPage {
         "Home",
         "Produtos",
         "CadastrarUsuario",
-        "Login"
+        "Login",
+        "GeradorDeFaltas",
     ];
 
     /** Guarda a lista de pastas de controllers disponíveis. @var array */
     private array $listDirectories = [
         "home",
         "produtos",
-        "users"
+        "users",
+        "gerador_faltas",
     ];
 
     /**
