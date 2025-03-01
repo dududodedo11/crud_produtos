@@ -1,5 +1,8 @@
 <?php
-// View conrespondente à página produto/{id}
+// View conrespondente à página produto/index/{id}
+
+use Client\Helpers\CSRF;
+
 ?>
 
 <!DOCTYPE html>
@@ -17,13 +20,37 @@
     <main class="container">
         <div class="card">
             <div class="card-header">
-                <span class=""><?php echo $data['product']['name'] ?></span>
-                <button class="float-end btn btn-info">Atualizar</button>
+                <div class="float-end">
+                    <button class="btn btn-primary mx-1">Atualizar</button>
+                    <form action="<?php echo $_ENV['APP_URL'] ?>produtos/delete" method="post" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="<?php echo CSRF::generateCSRFToken("form_delete_product"); ?>">
+                        <input type="hidden" name="product_id" value="<?php echo $data['product']['id']; ?>">
+                        <button class="btn btn-danger" type="submit">Deletar</button>
+                    </form>
+                </div>
             </div>
             <div class="card-body">
-                <form action="">
-                    <div class="mb-3">
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis hic quis accusamus voluptatem, repudiandae nostrum modi necessitatibus incidunt quam in maiores dolore a rem quasi debitis veritatis, natus, dolorem porro.</p>
+                <form>
+                    <div class="">
+                        <div class="mb-3">
+                            <label for="nameProduct">Nome:</label>
+                            <input type="text" name="name" id="nameProduct" class="form-control" value="<?php echo $data['product']['name'] ?>" disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="quantityProduct">Quantidade (estoque):</label>
+                            <input type="number" name="quantity" id="quantityProduct" class="form-control" value="<?php echo $data['product']['quantity'] ?>" disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="codeProduct">Código do produto:</label>
+                            <input type="text" name="code" id="codeProduct" class="form-control" value="<?php echo $data['product']['code'] ?>" disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descriptionProduct">Descrição/Observação:</label>
+                            <textarea name="description" id="descriptionProduct" class="form-control" rows="3" disabled><?php echo empty($data['product']['description']) ? "Sem descrição" : $data['product']['description']; ?></textarea>
+                        </div>
                     </div>
                 </form>
             </div>

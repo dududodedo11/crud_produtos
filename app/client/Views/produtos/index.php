@@ -1,5 +1,8 @@
 <?php
 // Essa view corresponde à página produtos/index do site.
+
+use Client\Helpers\CSRF;
+
 ?>
 
 <!DOCTYPE html>
@@ -16,9 +19,11 @@
     <?php $view->component("navbar") ?>
     <main class="container">
         <div class="container">
+            <p class="text-center text-success"><?php echo $_SESSION['delete_product_response_success'] ?? "" ?></p>
+            <h1>Lista de produtos</h1>
             <div class="card">
                 <div class="card-header">
-                    <button class="btn btn-primary float-right">Novo Produto</button>
+                    <a href="<?php echo $view->linkPage("produtos/create") ?>" class="btn btn-primary float-right">Novo Produto</a>
                 </div>
                 <div class="card-body">
                     <table class="table table-dark table-striped">
@@ -41,9 +46,13 @@
                                     <td><?php echo $product['code']; ?></td>
                                     <td><?php echo $product['quantity']; ?></td>
                                     <td>
-                                        <button class="btn btn-primary">Ação 1</button>
-                                        <button class="btn btn-secondary">Ação 2</button>
-                                        <button class="btn btn-danger">Ação 3</button>
+                                        <a href="<?php echo $_ENV['APP_URL'] . "produtos/index/" . $product['id'] ?>" class="btn btn-primary">Detalhes</a>
+                                        <button class="btn btn-secondary">Editar</button>
+                                        <form action="<?php echo $_ENV['APP_URL'] ?>produtos/delete" method="post" class="d-inline">
+                                            <input type="hidden" name="csrf_token" value="<?php echo CSRF::generateCSRFToken("form_delete_product"); ?>">
+                                            <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+                                            <button class="btn btn-danger" type="submit">Deletar</button>
+                                        </form>
                                     </td>
                                 </tr>
                             <?php
@@ -61,6 +70,8 @@
 
 
     <?php $view->component("bootstrapjs") ?>
+    <?php 
+    unset($_SESSION['delete_product_response_success']);
+    ?>
 </body>
-
 </html>

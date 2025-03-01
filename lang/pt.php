@@ -7,4 +7,5 @@ return [
     'min' => 'O campo :attribute deve ter pelo menos :min caracteres.',
     'quantity.min' => 'O campo :attribute deve conter valores acima de :min.',
     'max' => 'O campo :attribute não pode ter mais de :max caracteres.',
+    'integer' => 'O campo :attribute deve ser um número inteiro.',
 ];

@@ -34,6 +34,7 @@ final class Product extends Model
         } catch (PDOException $e) {
             // Gera um log sério de erro na consulta SQL.
             $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), null);
+            return [];
         }
     }
 
@@ -76,6 +77,24 @@ final class Product extends Model
             $response = $stmt->fetch(PDO::FETCH_ASSOC);
 
             return $response;
+        } catch (PDOException $e) {
+            // Gera um log sério de erro na consulta SQL.
+            $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), null);
+        }
+    }
+
+    public function delete($id) {
+        try {
+            // Fazendo consulta PDO.
+            $query = "DELETE FROM products WHERE id = :id AND user_id = :user_id";
+            $stmt = $this->getConnection()->prepare($query);
+
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->bindValue(':user_id', $_SESSION['user_logged']['id'], PDO::PARAM_INT);
+
+            $stmt->execute();
+
+            return true;
         } catch (PDOException $e) {
             // Gera um log sério de erro na consulta SQL.
             $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), null);

@@ -33,7 +33,7 @@ final class Produtos extends Controller
             $productModel = new Product;
             $product = $productModel->getById($parameter);
 
-            if($product) {
+            if ($product) {
                 // Carregar a view de produtos/index com o produto específico.
                 $this->view("produtos.product", ['product' => $product]);
             } else {
@@ -148,6 +148,52 @@ final class Produtos extends Controller
 
     public function delete(string|null $parameter)
     {
-        echo "Deletar produto específico";
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            $dataForm = filter_input_array(INPUT_POST, FILTER_DEFAULT);
+
+            if (isset($dataForm['csrf_token']) && CSRF::validateCSRFToken("form_delete_product", $dataForm['csrf_token'] ?? [])) {
+                $validator = new Validator();
+
+                // Adicionar a regra Unique às opções.
+                $validator->addValidator("unique", new UniqueRuleRakit);
+
+                // Mudar linguagem das mensagens para português.
+                $validator->setMessages(require "lang/pt.php");
+
+                // Criar a validação.
+                $validation = $validator->make($dataForm, [
+                    "product_id" => "required|integer|min:1",
+                ]);
+
+                $validation->validate();
+
+                if (!$validation->fails()) {
+                    // Instanciar a Model de produtos.
+                    $product = new Product;
+
+                    $response = $product->delete($dataForm['product_id']);
+
+                    if ($response) {
+                        // Criar resposta de sucesso.
+                        $_SESSION['delete_product_response_success'] = "Produto deletado com sucesso!";
+
+                        // Redirecionar para a página de produtos.
+                        header("Location: {$_ENV['APP_URL']}produtos");
+                    } else {
+                        // Redirecionar para página de erro 500.
+                        ErrorPage::error500();
+                    }
+                } else {
+                    // Redirecionar para página de erro 500.
+                    ErrorPage::error500();
+                }
+            } else {
+                // Redirecionar para página de erro 500.
+                ErrorPage::error500();
+            }
+        } else {
+            // Redirecionar para página de erro 404.
+            ErrorPage::error404("Página não encontrada");
+        }
     }
 }

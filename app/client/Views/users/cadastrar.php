@@ -21,7 +21,7 @@ use Client\Helpers\CSRF;
         <div class="w-100 d-flex justify-content-center mb-3">
             <img src="<?php echo $_ENV['APP_LOGO_PATH'] ?>" alt="Logo do site" class="w-25">
         </div>
-        <form action="cadastrar-usuario/create" method="POST" class="border border-1 p-3 rounded needs-validation">
+        <form action="<?php echo $_ENV['APP_URL'] ?>cadastrar-usuario/create" method="POST" class="border border-1 p-3 rounded needs-validation">
             <h1 class="h3 fw-normal mb-3 text-center">Cadastrar Usuário</h1>
             <input type="hidden" name="csrf_token" value="<?php echo CSRF::generateCSRFToken("form_create_users") ?>">
 

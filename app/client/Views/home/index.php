@@ -20,7 +20,7 @@
         ?>
         <p style="color: blue">Olá, <?php echo $_SESSION['user_logged']['username'] ?></p>
 
-        <form action="login/delete" method="POST">
+        <form action="<?php echo $_ENV['APP_URL'] ?>login/delete" method="POST">
             <button type="submit">Sair da conta</button>
         </form>
         <?php
