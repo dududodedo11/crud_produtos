@@ -3,7 +3,7 @@
 namespace Client\Controllers\gerador_faltas;
 
 use Client\Controllers\Services\Controller;
-use Client\Helpers\ReceiveGetParameters;
+use Client\Helpers\ReceiveUrlParameters;
 use Client\Middlewares\VerifyLogin;
 
 class GeradorDeFaltas extends Controller
@@ -22,7 +22,7 @@ class GeradorDeFaltas extends Controller
      */
     public function index(string|null $parameter)
     {
-        $queryParams = ReceiveGetParameters::receiveGetParameters();
+        $queryParams = ReceiveUrlParameters::receiveUrlParameters();
 
         $option = filter_var($queryParams['option'] ?? "", FILTER_SANITIZE_NUMBER_INT);
 
