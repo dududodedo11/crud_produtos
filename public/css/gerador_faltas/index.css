@@ -2,6 +2,6 @@ body {
     overflow: hidden;
 }
 
-.list-group-style {
-    cursor: none;
+.list-group-options {
+    cursor: pointer
 }

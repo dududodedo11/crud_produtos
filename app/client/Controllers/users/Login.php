@@ -6,6 +6,7 @@ use Client\Controllers\Services\Controller;
 use Client\Controllers\Services\UniqueRuleRakit;
 use Client\Helpers\CSRF;
 use Client\Helpers\ErrorPage;
+use Client\Helpers\ReceiveUrlParameters;
 use Client\Middlewares\VerifyLogin;
 use Client\Models\User;
 use Rakit\Validation\Validator;
@@ -18,16 +19,9 @@ class Login extends Controller {
     }
 
     public function index(string|null $parameter) {
-        // Receber a url e dividir as partes.
-        $parseUrlLogin = parse_url($_SERVER['REQUEST_URI']);
+        $queryParams = ReceiveUrlParameters::receiveUrlParameters();
 
-        // Receber a query da url (completa em string), se houver.
-        $urlQuery = $parseUrlLogin['query'] ?? "";
-
-        // Dividindo a query (string) em um array.
-        parse_str($urlQuery, $queryParams);
-
-        // A variável $redirect será a parte desejada, ou null;
+        // A variável $redirect será a parte desejada, ou a página home;
         $redirect = $queryParams['redirect'] ?? $_ENV['APP_URL'];
 
         // Se a variável $redirect não for igual a URL base, então, crie a variável de aviso.
