@@ -33,6 +33,11 @@ use Client\Helpers\CSRF;
                 <form>
                     <div class="">
                         <div class="mb-3">
+                            <label for="idProduct">ID do produto:</label>
+                            <input type="number" name="id" id="idProduct" class="form-control" value="<?php echo $data['product']['id'] ?>" disabled>
+                        </div>
+
+                        <div class="mb-3">
                             <label for="nameProduct">Nome:</label>
                             <input type="text" name="name" id="nameProduct" class="form-control" value="<?php echo $data['product']['name'] ?>" disabled>
                         </div>
