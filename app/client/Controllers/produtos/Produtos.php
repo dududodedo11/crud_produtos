@@ -9,6 +9,7 @@ use Client\Helpers\ErrorPage;
 use Client\Helpers\GenerateLog;
 use Client\Middlewares\VerifyLogin;
 use Client\Models\Product;
+use Generator;
 use Rakit\Validation\Validator;
 
 final class Produtos extends Controller
@@ -58,8 +59,10 @@ final class Produtos extends Controller
      */
     public function create(string|null $parameter)
     {
-        // Se for POST, é criar um produto.
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            // Se for POST, é criar para criar um produto.
+
+            // Receber e limpar os dados do formulário.
             $dataForm = filter_input_array(INPUT_POST, FILTER_DEFAULT);
 
             if (isset($dataForm['csrf_token']) && CSRF::validateCSRFToken("form_create_product", $dataForm['csrf_token'] ?? [])) {
@@ -92,6 +95,7 @@ final class Produtos extends Controller
                     // Instanciar a Model de produtos.
                     $product = new Product;
 
+                    // Criar um array de dados para enviar à Model.
                     $dataProduct = [
                         "user_id" => $_SESSION['user_logged']['id'],
                         "name" => $dataForm['name'],
@@ -103,32 +107,47 @@ final class Produtos extends Controller
                     // Criar o produto.
                     $response = $product->create($dataProduct);
 
-                    // Se houver resposta, a criação deu certo.
                     if ($response) {
+                        // Se houver resposta, a criação deu certo.
+
                         // Criar resposta de sucesso.
                         $_SESSION['create_product_response_success'] = "Produto criado com sucesso!";
 
                         // Redirecionar para a página de criar produto.
                         header("Location: {$_ENV['APP_URL']}produtos/create");
                     } else {
-                        // Caso não houver resposta, houve algum erro
+                        // Caso não houver resposta, houve algum erro.
+
+                        // Criar resposta de erro + fomulário.
                         $_SESSION['create_product_response_incorrect_form'] = "Erro na criação de novo produto, por favor, tente novamente maais tarde.";
                         $_SESSION['create_product_response_invalid_form']['form'] = $dataForm;
+
+                        GenerateLog::generateLog("notice", "Erro na criação de novo produto (Model sem resposta)", ['form' => $dataForm, 'user_id' => $_SESSION['user_logged']['id'], 'uri' => $_SERVER['REQUEST_URI']]);
 
                         // Redirecionar novamente à página criar produto.
                         header("Location: {$_ENV['APP_URL']}produtos/create");
                     }
                 } else {
-                    // Se a validação falhou, crie uma Sessão com as informções de formulário e erros.
+                    // Validação falhou.
+
+                    // Retornar uma Sessão com o formulário + erros.
                     $_SESSION['create_product_response_invalid_form'] = ["form" => $dataForm, "errors" => $validation->errors()->firstOfAll()];
+
+                    // Gerar log "debug".
+                    GenerateLog::generateLog("debug", "Validação Rakit de formulário de criação de produto falhou", ["form" => $dataForm, "errors" => $validation->errors()->firstOfAll(), "user-id" => $_SESSION['user_logged']['id']]);
 
                     // Redirecionar novamente à página criar produto.
                     header("Location: {$_ENV['APP_URL']}produtos/create");
                 }
             } else {
                 // Token CSRF inválido.
+
+                // Retornar resposta de erro + formulário.
                 $_SESSION['create_product_response_incorrect_form'] = "Erro de segurança do formulário, por favor, recarregue a página e tente novamente";
                 $_SESSION['create_product_response_invalid_form']['form'] = $dataForm;
+
+                // Gerar log "info".
+                GenerateLog::generateLog("info", "Token CSRF inválido em produtos/create", ["form" => $dataForm, "user-id" => $_SESSION['user_logged']['id']]);
 
                 // Redirecionar novamente à página criar produto.
                 header("Location: {$_ENV['APP_URL']}produtos/create");
@@ -137,6 +156,11 @@ final class Produtos extends Controller
             // Se for GET, apresentar a view de criar produto.
             $this->view("produtos.create", null);
         } else {
+            // Método não suportado.
+
+            // Gerar log "info".
+            GenerateLog::generateLog("info", "Método não suportado em produtos/create", ["method" => $_SERVER['REQUEST_METHOD'], "user_id" => $_SESSION['user_logged']['id']]);
+
             // Redirecionar para página de erro 404.
             ErrorPage::error404("Página não encontrada");
         }

@@ -3,35 +3,27 @@
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php $view->callHeader("basic") ?>
     <title>Home</title>
 </head>
-<body>
+<body class="bg-body-tertiary">
     <?php $view->component("navbar") ?>
-    <h1>Bem-vindo ao site!</h1>
-    <p>Página Home</p>
 
-    <?php
-    if(isset($_SESSION['user_logged'])) {
-        ?>
-        <p style="color: blue">Olá, <?php echo $_SESSION['user_logged']['username'] ?></p>
-
-        <form action="<?php echo $_ENV['APP_URL'] ?>login/delete" method="POST">
-            <button type="submit">Sair da conta</button>
-        </form>
-        <?php
-    }
-    ?>
+    <div class="container">
+        <h1 class="mb-3">Página Inicial</h1>
+        <h2>Links Úteis:</h2>
+        <ul>
+            <li><a href="<?php echo $view->linkAsset("login") ?>">Login</a></li>
+            <li><a href="<?php echo $view->linkAsset("cadastrar-usuario") ?>">Cadastrar Usuário</a></li>
+            <li><a href="<?php echo $view->linkAsset("produtos") ?>">Todos os produtos</a></li>
+            <li><a href="<?php echo $view->linkAsset("produtos/create") ?>">Novo Produto</a></li>
+        </ul>
+    </div>
 
     <?php $view->component("bootstrapjs") ?>
-
-    <?php
-    // Destruir todas as variáveis de sessão de mensagens.
-    unset($_SESSION['create_users_response_success']);
-    ?>
 </body>
 </html>

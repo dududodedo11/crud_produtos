@@ -67,7 +67,7 @@ use Client\Helpers\CSRF;
     </main>
 
     <?php $view->component("bootstrapjs") ?>
-    <?php 
+    <?php
     unset($_SESSION['update_product_response_success']);
     ?>
 </body>
