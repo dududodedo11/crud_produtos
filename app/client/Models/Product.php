@@ -38,7 +38,13 @@ final class Product extends Model
         }
     }
 
-    public function create($data)
+    /**
+     * Cria um novo produto no banco de dados.
+     *
+     * @param array $data
+     * @return bool
+     */
+    public function create(array $data):bool
     {
         // Tentativa de consulta com try-catch.
         try {
@@ -58,11 +64,17 @@ final class Product extends Model
         } catch (PDOException $e) {
             // Gera um log sério de erro na consulta SQL.
             $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), $data);
+            return false;
         }
     }
 
-    public function getById($id)
-    {
+    /**
+     * Retorna um produto pelo seu ID.
+     *
+     * @param int $id
+     * @return array
+     */
+    public function getById(int $id):array {
         // Tentativa de consulta com try-catch.
         try {
             // Fazendo consulta PDO.
@@ -80,10 +92,17 @@ final class Product extends Model
         } catch (PDOException $e) {
             // Gera um log sério de erro na consulta SQL.
             $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), null);
+            return [];
         }
     }
 
-    public function delete($id) {
+    /**
+     * Deleta um produto do banco de dados.
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function delete(int $id):bool {
         try {
             // Fazendo consulta PDO.
             $query = "DELETE FROM products WHERE id = :id AND user_id = :user_id";
@@ -98,6 +117,30 @@ final class Product extends Model
         } catch (PDOException $e) {
             // Gera um log sério de erro na consulta SQL.
             $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), null);
+            return false;
+        }
+    }
+
+    public function update(array $data):bool {
+        try {
+            // Fazendo consulta PDO.
+            $query = "UPDATE products SET name = :name, quantity = :quantity, code = :code, description = :description WHERE id = :id AND user_id = :user_id";
+            $stmt = $this->getConnection()->prepare($query);
+
+            $stmt->bindValue(':id', $data['id'], PDO::PARAM_INT);
+            $stmt->bindValue(':user_id', $_SESSION['user_logged']['id'], PDO::PARAM_INT);
+            $stmt->bindValue(':name', $data['name'], PDO::PARAM_STR);
+            $stmt->bindValue(':quantity', $data['quantity'], PDO::PARAM_INT);
+            $stmt->bindValue(':code', $data['code'], PDO::PARAM_STR);
+            $stmt->bindValue(':description', $data['description'], PDO::PARAM_STR);
+
+            $stmt->execute();
+
+            return true;
+        } catch (PDOException $e) {
+            // Gera um log sério de erro na consulta SQL.
+            $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), null);
+            return false;
         }
     }
 }

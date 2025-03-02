@@ -6,6 +6,7 @@ use Client\Controllers\Services\Controller;
 use Client\Controllers\Services\UniqueRuleRakit;
 use Client\Helpers\CSRF;
 use Client\Helpers\ErrorPage;
+use Client\Helpers\GenerateLog;
 use Client\Middlewares\VerifyLogin;
 use Client\Models\Product;
 use Rakit\Validation\Validator;
@@ -141,17 +142,156 @@ final class Produtos extends Controller
         }
     }
 
+    /**
+     * Função correspondente a produtos/update.
+     *
+     * @param string|null $parameter É o ID que pode vir na URL.
+     * @return void
+     */
     public function update(string|null $parameter)
     {
-        echo "Atualizar produto específico";
+        if ($_SERVER['REQUEST_METHOD'] == "GET") {
+            // Receber e limpar o ID do produto.
+            $productId = filter_var($parameter, FILTER_SANITIZE_NUMBER_INT);
+
+            if(!empty($productId)) {
+                // Caso o Id não esteja vazio, buscar o produto.
+
+                // Instanciar a Model de produtos.
+                $product = new Product;
+
+                // Buscar o produto pelo ID.
+                $productData = $product->getById($productId);
+
+                if($productData) {
+                    // Se o produto foi encontrado, apresentar a view de atualizar produto.
+                    $this->view("produtos.update", ['product' => $productData]);
+                } else {
+                    // Produto não encontrado.
+
+                    // Gerar log de "notice".
+                    GenerateLog::generateLog("notice", "Sem resposta da Model para buscar produto em produtos/update/{$parameter}", ["product_id" => $productId, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
+
+                    // Redirecionar para a página de erro 404.
+                    ErrorPage::error404("Página não encontrada");
+                }
+            } else {
+                ErrorPage::error404("Página não encontrada");
+            }
+        } elseif($_SERVER['REQUEST_METHOD'] == "POST") {
+            // Receber os dados do formulário.
+            $dataForm = filter_input_array(INPUT_POST, FILTER_DEFAULT);
+
+            if (isset($dataForm['csrf_token']) && CSRF::validateCSRFToken("form_update_product", $dataForm['csrf_token'] ?? [])) {
+                // Token CSRF válido.
+
+                // Instanciar a classe de validação.
+                $validator = new Validator();
+
+                // Adicionar a regra Unique às opções.
+                $validator->addValidator("unique", new UniqueRuleRakit);
+
+                // Mudar linguagem das mensagens para português.
+                $validator->setMessages(require "lang/pt.php");
+
+                // Criar a validação.
+                $validation = $validator->make($dataForm, [
+                    "name" => "required",
+                    "quantity" => "required|integer|min:0",
+                    "code" => "required|unique:products,code,{$dataForm['id']}",
+                ]);
+
+                // Mudar o nome dos campos.
+                $validation->setAliases([
+                    "name" => "nome",
+                    "quantity" => "quantidade",
+                    "code" => "código",
+                ]);
+
+                // Executar a validação.
+                $validation->validate();
+
+                if(!$validation->fails()) {
+                    // A validação NÃO falhou.
+
+                    // Instanciar a Model de produto.
+                    $product = new Product;
+
+                    // Atualizar o produto.
+                    $response = $product->update($dataForm);
+
+                    if($response) {
+                        // Houve resposta da Model, o produto foi atualizado.
+
+                        // Retornar uma Sessão com mensagem de sucesso.
+                        $_SESSION['update_product_response_success'] = "Produto atualizado com sucesso!";
+
+                        // Redirecionar para a página de visuzalizar produto.
+                        header("Location: {$_ENV['APP_URL']}produtos/index/{$dataForm['id']}");
+                    } else {
+                        // Não houve resposta da Model.
+
+                        // Retornar uma Sessão com formulário + mensagem de erro.
+                        $_SESSION['update_product_response_incorrect_form'] = "Erro na atualização do produto, por favor, tente novamente maais tarde.";
+                        $_SESSION['update_product_response_invalid_form']['form'] = $dataForm;
+
+                        // Gerar log "notice".
+                        GenerateLog::generateLog("notice", "Sem resposta da Model para atualização de produtos em produtos/update/{$parameter}", ["form" => $dataForm, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
+
+                        // Redirecionar novamente à página de atualizar produto.
+                        header("Location: {$_ENV['APP_URL']}produtos/update/{$dataForm['id']}");
+                    }
+                } else {
+                    // Validação falhou.
+
+                    // Retornar uma Sessão com as informções de formulário e erros.
+                    $_SESSION['update_product_response_invalid_form'] = ["form" => $dataForm, "errors" => $validation->errors()->firstOfAll()];
+
+                    // Gerar Log "debug".
+                    GenerateLog::generateLog("debug", "Validação Rakit em produtos/update/{$parameter} falhou", ["form" => $dataForm, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id'], "errors" => $validation->errors()->firstOfAll()]);
+
+                    // Redirecionar novamente à página atualizar produto.
+                    header("Location: {$_ENV['APP_URL']}produtos/update/{$dataForm['id']}");
+                }
+                
+            } else {
+                // Token CSRF inválido.
+
+                // Retornar a mensagem de erro + o formulário.
+                $_SESSION['update_product_response_incorrect_form'] = "Erro de segurança do formulário, por favor, recarregue a página e tente novamente";
+                $_SESSION['update_product_response_invalid_form']['form'] = $dataForm;
+                
+                // Gerar Log "info".
+                GenerateLog::generateLog("info", "Acesso ao produtos/update/{$parameter} com Token CSRF inválido", ["csrf_token" => $dataForm['csrf_token'] ?? null, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
+
+                // Redirecionar novamente à página criar atualizar produto.
+                header("Location: {$_ENV['APP_URL']}produtos/update/{$dataForm['id']}");
+            }
+        } else {
+            // Método não suportado.
+
+            // Gerar Log "info".
+            GenerateLog::generateLog("info", "Acesso ao produtos/update/{$parameter} com método não suportado", ["method" => $_SERVER['REQUEST_METHOD'], "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
+
+            // Redirecionar para página de erro 404.
+            ErrorPage::error404("Página não encontrada");
+        }
     }
 
+    /**
+     * Função correspondente a produtos/delete.
+     *
+     * @param string|null $parameter É o ID que pode vir na URL.
+     * @return void
+     */
     public function delete(string|null $parameter)
     {
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            // Receber os dados do formulário (CSRF e ID a ser deletado).
             $dataForm = filter_input_array(INPUT_POST, FILTER_DEFAULT);
 
             if (isset($dataForm['csrf_token']) && CSRF::validateCSRFToken("form_delete_product", $dataForm['csrf_token'] ?? [])) {
+                // Instanciar a classe de validação.
                 $validator = new Validator();
 
                 // Adicionar a regra Unique às opções.
@@ -165,33 +305,57 @@ final class Produtos extends Controller
                     "product_id" => "required|integer|min:1",
                 ]);
 
+                // Executar a validação.
                 $validation->validate();
 
                 if (!$validation->fails()) {
                     // Instanciar a Model de produtos.
                     $product = new Product;
 
+                    // Deletar o produto.
                     $response = $product->delete($dataForm['product_id']);
 
                     if ($response) {
+                        // Produto deletado com sucesso.
+
                         // Criar resposta de sucesso.
                         $_SESSION['delete_product_response_success'] = "Produto deletado com sucesso!";
 
                         // Redirecionar para a página de produtos.
                         header("Location: {$_ENV['APP_URL']}produtos");
                     } else {
+                        // Não houve resposta da Model / Falha no DELETE.
+
+                        // Gerar Log "notice".
+                        GenerateLog::generateLog("notice", "Sem resposta da Model para deletar produto em produtos/delete/{$parameter}", ["form" => $dataForm, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
+
                         // Redirecionar para página de erro 500.
                         ErrorPage::error500();
                     }
                 } else {
+                    // Validação falhou.
+
+                    // Gerar um Log "debug".
+                    GenerateLog::generateLog("debug", "Validação Rakit em produtos/delete falhou", ["form" => $dataForm, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
+
                     // Redirecionar para página de erro 500.
                     ErrorPage::error500();
                 }
             } else {
+                // Token CSRF inválido.
+
+                // Gerar Log "info".
+                GenerateLog::generateLog("info", "Acesso ao produtos/delete com Token CSRF inválido", ["csrf_token" => $dataForm['csrf_token'] ?? null, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
+
                 // Redirecionar para página de erro 500.
                 ErrorPage::error500();
             }
         } else {
+            // Método não suportado.
+
+            // Gerar Log "info".
+            GenerateLog::generateLog("info", "Acesso ao produtos/delete com método não suportado", ["method" => $_SERVER['REQUEST_METHOD'], "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
+
             // Redirecionar para página de erro 404.
             ErrorPage::error404("Página não encontrada");
         }

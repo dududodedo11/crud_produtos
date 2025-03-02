@@ -16,8 +16,12 @@ class UniqueRuleRakit extends Rule {
      */
     protected $message = "O :attribute :value já está em uso.";
 
-    // Atributo do Rakit validation para a verificação unique.
-    protected $fillableParams = ['table', 'column'];
+    /**
+     * Guarda o array de parâmetros da regra Unique.
+     *
+     * @var array
+     */
+    protected $fillableParams = ['table', 'column', 'except_id'];
 
     /**
      * Função para checar se o valor já foi usado.
@@ -26,16 +30,13 @@ class UniqueRuleRakit extends Rule {
      * @return boolean Retorna: Existe = false, Não existe = true.
      */
     public function check($value):bool {
-        // Esses códigos abaixo são do Rakit Validation para receber os parâmetros da verificação unique.
         $this->requireParameters(['table', 'column']);
 
         $column = $this->parameter('column');
         $table = $this->parameter('table');
-
-        // Instanciar a Service Model que checa o valor no DB.
+        $exceptId = $this->parameter('except_id');
+        
         $validateUniqueRule = new UniqueRule;
-
-        // Retornar true para não usada e false para usada.
-        return $validateUniqueRule->getRecord($table, $column, $value);
+        return $validateUniqueRule->getRecord($table, $column, $value, $exceptId);
     }
 }

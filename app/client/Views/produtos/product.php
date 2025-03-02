@@ -21,7 +21,7 @@ use Client\Helpers\CSRF;
         <div class="card">
             <div class="card-header">
                 <div class="float-end">
-                    <button class="btn btn-primary mx-1">Atualizar</button>
+                    <a href="<?php echo $_ENV['APP_URL'] . "produtos/update/" . $data['product']['id'] ?>" class="btn btn-primary mx-1">Editar</a>
                     <form action="<?php echo $_ENV['APP_URL'] ?>produtos/delete" method="post" class="d-inline">
                         <input type="hidden" name="csrf_token" value="<?php echo CSRF::generateCSRFToken("form_delete_product"); ?>">
                         <input type="hidden" name="product_id" value="<?php echo $data['product']['id']; ?>">
@@ -58,11 +58,18 @@ use Client\Helpers\CSRF;
                         </div>
                     </div>
                 </form>
+
+                <p class="text-success mt-1 text-center">
+                    <?php echo $_SESSION['update_product_response_success'] ?? "" ?>
+                </p>
             </div>
         </div>
     </main>
 
     <?php $view->component("bootstrapjs") ?>
+    <?php 
+    unset($_SESSION['update_product_response_success']);
+    ?>
 </body>
 
 </html>
