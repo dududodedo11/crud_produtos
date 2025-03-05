@@ -3,3 +3,11 @@ Como usar os difrentes ambientes de desenvolvimento no composer
 Ver short tags do php
 
 Dropdown no navbar
+
+Arrumar os links da página home
+
+Melhorar a classe ReceiveUrlParameters
+
+Melhorar as views com o "blade" do próprio php + identação.
+
+Documentar/Verificar Documentação as Controllers, Models, Views, Helpers e Services.
