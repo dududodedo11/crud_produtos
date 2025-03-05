@@ -17,7 +17,7 @@ final class Product extends Model
      *
      * @return array
      */
-    public function all(): array
+    public function all():array
     {
         // Tentativa de consulta com try-catch.
         try {
@@ -38,7 +38,7 @@ final class Product extends Model
         }
     }
 
-    public function paginate(int $page, int $limit): array
+    public function paginate(int $page, int $limit):array
     {
         // Tentativa de consulta com try-catch.
         try {
@@ -69,10 +69,10 @@ final class Product extends Model
     /**
      * Cria um novo produto no banco de dados.
      *
-     * @param array $data
+     * @param array $data São os dados do produto + o ID do usuário que criou o produto.
      * @return bool
      */
-    public function create(array $data): bool
+    public function create(array $data):bool
     {
         // Tentativa de consulta com try-catch.
         try {
@@ -99,10 +99,10 @@ final class Product extends Model
     /**
      * Retorna um produto pelo seu ID.
      *
-     * @param int $id
+     * @param int $id É o ID do produto que será buscado.
      * @return array
      */
-    public function getById(int $id): array
+    public function getById(int $id):array
     {
         // Tentativa de consulta com try-catch.
         try {
@@ -128,10 +128,10 @@ final class Product extends Model
     /**
      * Deleta um produto do banco de dados.
      *
-     * @param int $id
+     * @param int $id É o ID do produto que será deletado.
      * @return bool
      */
-    public function delete(int $id): bool
+    public function delete(int $id):bool
     {
         try {
             // Fazendo consulta PDO.
@@ -151,6 +151,12 @@ final class Product extends Model
         }
     }
 
+    /**
+     * Atualiza um produto no banco de dados.
+     *
+     * @param array $data São os dados do produto que será atualizado.
+     * @return bool
+     */
     public function update(array $data): bool
     {
         try {

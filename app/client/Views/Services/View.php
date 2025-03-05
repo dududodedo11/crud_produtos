@@ -31,7 +31,7 @@ class View {
     }
 
     /**
-     * Usada para obter o link de uma página.
+     * Usada para obter o link absoluto de uma página.
      *
      * @param string $page Recebe o caminho/URL da página.
      * @return string Retorna o link absoluto.

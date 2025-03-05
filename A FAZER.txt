@@ -11,3 +11,5 @@ Melhorar a classe ReceiveUrlParameters
 Melhorar as views com o "blade" do próprio php + identação.
 
 Documentar/Verificar Documentação as Controllers, Models, Views, Helpers e Services.
+
+Trocar o FILTER_DEFAULT para FILTER_SANITIZE_SPECIAL_CHARS

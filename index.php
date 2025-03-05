@@ -3,6 +3,7 @@
 use Client\Controllers\Services\PageController;
 use Dotenv\Dotenv;
 
+// Iniciando a sessão.
 session_start();
 
 // Iniciando o composer.
@@ -15,7 +16,8 @@ $dotenv->load();
 // Definindo o fuso-horário da aplicação inteira.
 date_default_timezone_set($_ENV['APP_TIMEZONE']);
 
-// Chamado a classe que irá limpar a URL e iniciar os fluxos da aplicação.
+// Chamado a classe que irá iniciar os fluxos da aplicação.
 $url = new PageController();
 $url->loadPage();
+
 ?>

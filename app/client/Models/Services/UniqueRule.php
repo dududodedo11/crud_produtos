@@ -16,15 +16,16 @@ class UniqueRule extends Model {
      *
      * @param string $table Guarda a tabela desejda.
      * @param string $column Guarda a coluna desejada.
-     * @param [type] $value Guarda o valor a ser verificado.
+     * @param int|string|float $value Guarda o valor a ser verificado.
      * @param int|null $exceptId ID a ser excluído da verificação.
      * @return boolean
      */
-    public function getRecord(string $table, string $column, $value, $exceptId = null):bool {
+    public function getRecord(string $table, string $column, int|string|float $value, $exceptId = null):bool {
         try {
             // Query para a consulta. Retorna somente a quantidade de linhas encontradas.
             $query = "SELECT COUNT(id) as count FROM `{$table}` WHERE `{$column}` = :value";
             
+            // Caso seja passado uma exeção, adicionar na query.
             if ($exceptId) {
                 $query .= " AND id != :except_id";
             }
@@ -33,6 +34,7 @@ class UniqueRule extends Model {
             
             $stmt->bindValue(":value", $value, PDO::PARAM_STR);
             
+            // Caso seja passado uma exeção, adicionar na query.
             if ($exceptId) {
                 $stmt->bindValue(":except_id", $exceptId, PDO::PARAM_INT);
             }

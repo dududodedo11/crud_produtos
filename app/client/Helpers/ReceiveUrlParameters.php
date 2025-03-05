@@ -3,7 +3,7 @@
 namespace Client\Helpers;
 
 /**
- * Classe responsável por receber os parâmetros (GET) da URL.
+ * Classe responsável por receber os parâmetros (?parametro=valor) da URL.
  */
 class ReceiveUrlParameters {
     /**

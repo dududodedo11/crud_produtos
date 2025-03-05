@@ -12,13 +12,13 @@ use Client\Helpers\GenerateLog;
  * - Caso existam, ela chama eles.
  */
 class loadPage {
-    /** Recebe o nome da controler requisitda. @var string */
+    /** Recebe o nome da controler requisitada. @var string */
     private string $urlController;
 
-    /** Recebe o nome do método requisitdo. @var string */
+    /** Recebe o nome do método requisitado. @var string */
     private string $urlMethod;
 
-    /** Recebe o nome do ID requisitdo. @var string */
+    /** Recebe o nome do ID requisitado. @var string */
     private string $urlId;
 
     /** Recebe o path (caminho) da controller requisitada. @var string */
@@ -30,7 +30,6 @@ class loadPage {
         "Produtos",
         "CadastrarUsuario",
         "Login",
-        "GeradorDeFaltas",
     ];
 
     /** Guarda a lista de pastas de controllers disponíveis. @var array */
@@ -38,7 +37,6 @@ class loadPage {
         "home",
         "produtos",
         "users",
-        "gerador_faltas",
     ];
 
     /**
@@ -91,13 +89,10 @@ class loadPage {
         // Instancia a classe da controller requisitdada por meio do path que está em classLoad.
         $methodLoad = new $this->classLoad;
 
-        // Guarda o método requisitado em uma variável simples (fiz isso pois não estava sendo possível chamar o método diretamente em um atributo de classe).
-        $method = $this->urlMethod;
-
         // Se o método existir na controller requisitada, chame ele.
         if(method_exists($methodLoad, $this->urlMethod)) {
             // Método é chamado, agora o fluxo vai para a controler que foi requisitada.
-            $methodLoad->$method($this->urlId);
+            $methodLoad->{$this->urlMethod}($this->urlId);
         } else {
             // Se não existir o método, gerar um Log simples de notícia.
             GenerateLog::generateLog("notice", "Método requisitado não encontrado", [

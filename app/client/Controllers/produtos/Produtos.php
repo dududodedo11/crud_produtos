@@ -10,19 +10,20 @@ use Client\Helpers\GenerateLog;
 use Client\Helpers\ReceiveUrlParameters;
 use Client\Middlewares\VerifyLogin;
 use Client\Models\Product;
-use Generator;
 use Rakit\Validation\Validator;
 
 final class Produtos extends Controller
 {
     public function __construct()
     {
+        // Fazer a verificação de login e caso não houver, redirecionar para a página de login.
         $url = $_ENV['APP_URL'] . filter_input(INPUT_GET, "url", FILTER_SANITIZE_URL);
         VerifyLogin::redirect($url);
     }
 
     /**
      * Função correspondente a produtos/index ou produtos/{id}.
+     * Apresenta a lista de produtos ou um produto específico.
      *
      * @param string|null $parameter É o ID que pode vir na URL.
      * @return void
@@ -40,6 +41,8 @@ final class Produtos extends Controller
                 // Carregar a view de produtos/index com o produto específico.
                 $this->view("produtos.product", ['product' => $product]);
             } else {
+                GenerateLog::generateLog("notice", "Sem resposta da Model para buscar produto em produtos/{$parameter}", ["product_id" => $parameter, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
+
                 // Redirecionar para página de erro 404.
                 ErrorPage::error404("Página não encontrada");
             }
@@ -68,6 +71,7 @@ final class Produtos extends Controller
 
     /**
      * Função correspondente a produtos/create.
+     * Apresenta a view de criar produto ou cria um produto, dependendo do método.
      *
      * @param string|null $parameter É o ID que pode vir na URL.
      * @return void
@@ -80,7 +84,9 @@ final class Produtos extends Controller
             // Receber e limpar os dados do formulário.
             $dataForm = filter_input_array(INPUT_POST, FILTER_DEFAULT);
 
+            // Verificar se o token CSRF é válido.
             if (isset($dataForm['csrf_token']) && CSRF::validateCSRFToken("form_create_product", $dataForm['csrf_token'] ?? [])) {
+                // Instanciar a classe de validação.
                 $validator = new Validator();
 
                 // Adicionar a regra Unique às opções.
@@ -183,6 +189,7 @@ final class Produtos extends Controller
 
     /**
      * Função correspondente a produtos/update.
+     * Apresenta a view de atualizar produto ou realiza a atualização, dependendo do método.
      *
      * @param string|null $parameter É o ID que pode vir na URL.
      * @return void
@@ -221,6 +228,7 @@ final class Produtos extends Controller
             // Receber os dados do formulário.
             $dataForm = filter_input_array(INPUT_POST, FILTER_DEFAULT);
 
+            // Verificar se o token CSRF é válido.
             if (isset($dataForm['csrf_token']) && CSRF::validateCSRFToken("form_update_product", $dataForm['csrf_token'] ?? [])) {
                 // Token CSRF válido.
 
@@ -318,6 +326,7 @@ final class Produtos extends Controller
 
     /**
      * Função correspondente a produtos/delete.
+     * Só pode ser acessado via POST, pois não é uma página de visualização.
      *
      * @param string|null $parameter É o ID que pode vir na URL.
      * @return void
@@ -347,6 +356,8 @@ final class Produtos extends Controller
                 $validation->validate();
 
                 if (!$validation->fails()) {
+                    // Validação não falhou.
+
                     // Instanciar a Model de produtos.
                     $product = new Product;
 
@@ -362,7 +373,7 @@ final class Produtos extends Controller
                         // Redirecionar para a página de produtos.
                         header("Location: {$_ENV['APP_URL']}produtos");
                     } else {
-                        // Não houve resposta da Model / Falha no DELETE.
+                        // Não houve resposta da Model: Falha no DELETE.
 
                         // Gerar Log "notice".
                         GenerateLog::generateLog("notice", "Sem resposta da Model para deletar produto em produtos/delete/{$parameter}", ["form" => $dataForm, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);

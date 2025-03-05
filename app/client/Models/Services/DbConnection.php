@@ -45,9 +45,9 @@ abstract class DbConnection {
     /**
      * Instancia o PDO e guarda a conexão em um atributo.
      *
-     * @return object
+     * @return object|bool
      */
-    public function getConnection():object {
+    public function getConnection():object|bool {
         // Tenta fazer a conexão com um try-catch.
         try{
             // Instancia do PDO.
@@ -60,6 +60,8 @@ abstract class DbConnection {
             GenerateLog::generateLog("emergency", "Erro na conexão do banco de dados: " . $e->getMessage(), ["dbHost" => $this->dbHost, "dbPort" => $this->dbPort, "dbName" => $this->dbName, "dbUser" => $this->dbUser, "dbPassword" => $this->dbPassword]);
 
             ErrorPage::error500();
+
+            return false;
         }
     }
 }

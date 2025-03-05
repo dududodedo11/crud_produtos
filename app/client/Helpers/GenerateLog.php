@@ -36,7 +36,7 @@ class GenerateLog {
         // Nome do log, sempre será client.
         $log = new Logger('client');
 
-        // Como será o título do log. 
+        // Como será o título do log.
         $nameFileLog = date("d-m-Y") . ".log";
 
         // Onde será salvo o arquivo de log.

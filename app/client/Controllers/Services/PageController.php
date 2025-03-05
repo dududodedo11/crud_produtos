@@ -48,6 +48,7 @@ class PageController {
 
             // Caso não haja um método requisitado (Parte 2 da URl), o padrão é "index".
             $this->urlMethod = isset($this->urlArray[1]) ? $this->urlArray[1] : "index";
+            
             // Caso não haja um ID requisitado (Parte 3 da URl), o padrão é "".
             $this->urlId = isset($this->urlArray[2]) ? $this->urlArray[2] : "";
         } else {

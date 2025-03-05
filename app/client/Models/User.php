@@ -15,7 +15,7 @@ final class User extends Model {
      *
      * @return array
      */
-    public function all():array {
+    public function all():array|bool {
         // Tentativa de consulta com try-catch.
         try {
             // Fazendo consulta PDO.
@@ -28,6 +28,8 @@ final class User extends Model {
         } catch(PDOException $e) {
             // Gera um log sério de erro na consulta SQL.
             $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), null);
+
+            return false;
         }
         
     }
@@ -60,6 +62,8 @@ final class User extends Model {
         } catch (PDOException $e) {
             // Gera um log sério de erro na consulta SQL.
             $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), ['username' => $dataUser['username'], 'password' => $passwordWithHash]);
+
+            return false;
         }
     }
 
@@ -77,6 +81,8 @@ final class User extends Model {
             return $user;
         } catch(PDOException $e) {
             $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), ['username' => $username]);
+
+            return false;
         }
     }
 }

@@ -7,11 +7,13 @@ use Client\Controllers\Services\UniqueRuleRakit;
 use Client\Models\User;
 use Client\Helpers\CSRF;
 use Client\Helpers\ErrorPage;
+use Client\Helpers\GenerateLog;
 use Client\Middlewares\VerifyLogin;
 use Rakit\Validation\Validator;
 
 final class CadastrarUsuario extends Controller {
     public function __construct() {
+        // Caso o usuário esteja logado, ele não poderá entrar na página.
         if(VerifyLogin::verify()) {
             header("Location: {$_ENV['APP_URL']}");
         }
@@ -25,6 +27,7 @@ final class CadastrarUsuario extends Controller {
      * @return void
      */
     public function index(string|null $parameter) {
+        // Chamar a view de cadastrar-usuario.
         $this->view("users.cadastrar", null);
     }
 
@@ -76,29 +79,54 @@ final class CadastrarUsuario extends Controller {
                     $response = $user->create($dataForm);
 
                     if($response) {
-                        // Redirecionar para a página home, com mensagem de sucesso.
+                        // Criar mensagem de sucesso.
                         $_SESSION['create_users_response_success'] = "Usuário cadastrado com sucesso, por favor, entre na sua conta!";
+
+                        // Redirecionar para a página de login.
                         header("Location: {$_ENV['APP_URL']}login");
                     } else {
-                        // Redirecionar novamente para o cadastrar-usuario, com mensagem de erro.
+                        // Model sem resposta.
+
+                        // Criar mensagem de erro.
                         $_SESSION['create_users_response_error'] = "Erro na criação do usuário, por favor, tente novamente mais tarde";
+
+                        // Gerar log de "notice".
+                        GenerateLog::generateLog("notice", "Erro na criação de usuário: Model sem resposta.", []);
+
+                        // Redirecionar novamente para o cadastrar-usuario.
                         header("Location: {$_ENV['APP_URL']}cadastrar-usuario");
                     }
                 } else {
-                    // Se a validação falhou, crie uma Sessão com as informções de formulário e erros.
+                    // Validação falhou.
+
+                    // Criar mensagem de erro.
                     $_SESSION['create_users_response_invalid_form'] = ["form" => $dataForm, "errors" => $validation->errors()->firstOfAll()];
 
-                    // Redirecionar novamente à página Cadastrar Usuário.
+                    // Gerar log de "info".
+                    GenerateLog::generateLog("info", "Erro de validação de formulário.", ["errors" => $validation->errors()->firstOfAll()]);
+
+                    // Redirecionar novamente para o cadastrar-usuario.
                     header("Location: {$_ENV['APP_URL']}cadastrar-usuario");
                 }
             } else {
-                // Redirecionar novamente para o cadastrar-usuario, com mensagem de erro.
+                // Token CSRF inválido.
+
+                // Criar mensagem de erro.
                 $_SESSION['create_users_response_error'] = "Erro de segurança do formulário, por favor, recarregue a página e tente novamente";
+
+                // Gerar log de "notice".
+                GenerateLog::generateLog("notice", "Erro de segurança do formulário, token CSRF inválido", ["token" => $dataForm['csrf_token'] ?? null]);
+
+                // Redirecionar novamente para o cadastrar-usuario.
                 header("Location: {$_ENV['APP_URL']}cadastrar-usuario");
             }
         } else {
+            // Métoto não suportado.
+
+            GenerateLog::generateLog("notice", "Tentativa de acesso a página (POST) de cadastrar-usuario/create com método não suportado.", ['method' => $_SERVER['REQUEST_METHOD']]);
+
             // Redirecionar para página de erro 404.
-            ErrorPage::error404("Página não encontrada"); 
+            ErrorPage::error404("Página não encontrada");
         }
     }
 }

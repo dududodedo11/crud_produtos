@@ -5,11 +5,18 @@ namespace Client\Views\Services;
 use Client\Helpers\ErrorPage;
 use Client\Helpers\GenerateLog;
 use Client\Views\Services\View;
-use Error;
 
+/**
+ * Classe que chama as views e repassa os dados da controller.
+ */
 class LoadView {
+    /** Recebe o caminho/path da view chamada. @var string */
     private string $pathView;
+
+    /** Recebe o nome da view chamada. @var string */
     private string $nameView;
+
+    /** Recebe os dados que serão repassados à view. @var array|string|null */
     private array|string|null $data;
 
     /**
@@ -41,6 +48,8 @@ class LoadView {
         if(file_exists($this->pathView)) {
             // Define a variável que será usada para acessar os dados na view (fiz isso para não precisar usar o "$this->" dentro de uma view).
             $data = $this->data;
+
+            // Instancia a classe View para poder usar seus métodos dentro da view em si.
             $view = new View;
 
             // Incluir a view dentro da página/requisição.
