@@ -222,6 +222,7 @@ final class Produtos extends Controller
                     ErrorPage::error404("Página não encontrada");
                 }
             } else {
+                // Redirecionar para a página de erro 404.
                 ErrorPage::error404("Página não encontrada");
             }
         } elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
