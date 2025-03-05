@@ -38,13 +38,41 @@ final class Product extends Model
         }
     }
 
+    public function paginate(int $page, int $limit): array
+    {
+        // Tentativa de consulta com try-catch.
+        try {
+            $ofsset = ($page - 1) * 10;
+
+            // Fazendo consulta PDO.
+            $query = "SELECT id, user_id, name, code, quantity, description 
+            FROM products 
+            WHERE user_id = :user_id 
+            LIMIT :limit 
+            OFFSET :offset";
+            $stmt = $this->getConnection()->prepare($query);
+
+            $stmt->bindValue(':user_id', $_SESSION['user_logged']['id'], PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int) $ofsset, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // Gera um log sério de erro na consulta SQL.
+            $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), null);
+            return [];
+        }
+    }
+
     /**
      * Cria um novo produto no banco de dados.
      *
      * @param array $data
      * @return bool
      */
-    public function create(array $data):bool
+    public function create(array $data): bool
     {
         // Tentativa de consulta com try-catch.
         try {
@@ -74,7 +102,8 @@ final class Product extends Model
      * @param int $id
      * @return array
      */
-    public function getById(int $id):array {
+    public function getById(int $id): array
+    {
         // Tentativa de consulta com try-catch.
         try {
             // Fazendo consulta PDO.
@@ -102,7 +131,8 @@ final class Product extends Model
      * @param int $id
      * @return bool
      */
-    public function delete(int $id):bool {
+    public function delete(int $id): bool
+    {
         try {
             // Fazendo consulta PDO.
             $query = "DELETE FROM products WHERE id = :id AND user_id = :user_id";
@@ -121,7 +151,8 @@ final class Product extends Model
         }
     }
 
-    public function update(array $data):bool {
+    public function update(array $data): bool
+    {
         try {
             // Fazendo consulta PDO.
             $query = "UPDATE products SET name = :name, quantity = :quantity, code = :code, description = :description WHERE id = :id AND user_id = :user_id";

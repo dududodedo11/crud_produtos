@@ -23,21 +23,21 @@ $view = new View;
                 <li class="nav-item">
                     <a class="nav-link" href="<?php echo $view->linkPage("produtos") ?>">Produtos</a>
                 </li>
-                <?php
-                if (!isset($_SESSION['user_logged'])) {
-                ?>
+                <?php if (!isset($_SESSION['user_logged'])): ?>
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo $view->linkPage("cadastrar-usuario") ?>">Cadastrar Usuário</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo $view->linkPage("login") ?>">Login</a>
                     </li>
-                <?php } ?>
+                <?php endif; ?>
             </ul>
         </div>
 
+        <?php if (isset($_SESSION['user_logged'])): ?>
         <form action="<?php echo $_ENV['APP_URL'] ?>login/delete" method="POST" class="float-end border border-1 rounded d-inline">
             <button type="submit" class="btn text-white d-inline" style="font-size: 17px;"><i class="fa-solid fa-arrow-left"></i> Sair</button>
         </form>
+        <?php endif; ?>
     </div>
 </nav>

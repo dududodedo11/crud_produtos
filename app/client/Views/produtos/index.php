@@ -25,7 +25,7 @@ use Client\Helpers\CSRF;
                 <div class="card-header">
                     <a href="<?php echo $view->linkPage("produtos/create") ?>" class="btn btn-primary float-right">Novo Produto</a>
                 </div>
-                <div class="card-body">
+                <div class="card-body" id="ProductsTable">
                     <table class="table table-dark table-striped">
                         <thead>
                             <tr>
@@ -37,9 +37,7 @@ use Client\Helpers\CSRF;
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
-                            foreach ($data['products'] as $product) {
-                            ?>
+                            <?php foreach ($data['products'] as $product): ?>
                                 <tr scope="row">
                                     <td><?php echo $product['id']; ?></td>
                                     <td><?php echo $product['name']; ?></td>
@@ -55,14 +53,29 @@ use Client\Helpers\CSRF;
                                         </form>
                                     </td>
                                 </tr>
-                            <?php
-                            }
-                            ?>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
                 <div class="card-footer">
-                    <p>Total de <?php echo count($data['products']); ?> produtos!</p>
+                    <nav aria-label="Page navigation" class="">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item <?php echo $data['currentPage'] == 1 ? 'disabled' : ''; ?>">
+                                <a href="<?php echo $_ENV['APP_URL'] . "produtos?page=" . $data['currentPage'] - 1 . "#ProductsTable"; ?>" class="page-link">Anterior</a>
+                            </li>
+
+                            <?php for ($i = 1; $i <= $data['totalPages']; $i++): ?>
+                                <li class="page-item <?php echo $data['currentPage'] == $i ? 'active' : ''; ?>">
+                                    <a class="page-link" href="<?php echo $_ENV['APP_URL'] . "produtos?page=" . $i . "#ProductsTable"; ?>"><?php echo $i; ?></a>
+                                </li>
+                            <?php endfor; ?>
+
+                            <li class="page-item <?php echo $data['currentPage'] == $data['totalPages'] ? 'disabled' : ''; ?>">
+                                <a href="<?php echo $_ENV['APP_URL'] . "produtos?page=" . $data['currentPage'] + 1 . "#ProductsTable"; ?>" class="page-link">Próximo</a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <p class="text-center text-info">Você tem um total de <?php echo $data['totalProducts']; ?> produtos!</p>
                 </div>
             </div>
         </div>
@@ -70,8 +83,9 @@ use Client\Helpers\CSRF;
 
 
     <?php $view->component("bootstrapjs") ?>
-    <?php 
+    <?php
     unset($_SESSION['delete_product_response_success']);
     ?>
 </body>
+
 </html>

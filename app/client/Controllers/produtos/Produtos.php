@@ -7,6 +7,7 @@ use Client\Controllers\Services\UniqueRuleRakit;
 use Client\Helpers\CSRF;
 use Client\Helpers\ErrorPage;
 use Client\Helpers\GenerateLog;
+use Client\Helpers\ReceiveUrlParameters;
 use Client\Middlewares\VerifyLogin;
 use Client\Models\Product;
 use Generator;
@@ -43,11 +44,25 @@ final class Produtos extends Controller
                 ErrorPage::error404("Página não encontrada");
             }
         } else {
+            $page = ReceiveUrlParameters::receiveUrlParameters()["page"] ?? 1;
+            $limit = 12;
+
             $productModel = new Product;
-            $products = $productModel->all();
+            $products = $productModel->paginate($page, $limit);
+
+            $totalProducts = count($productModel->all());
+            $totalPages = ceil($totalProducts / $limit);
 
             // Carregar a view de produtos/index com a lista de produtos.
-            $this->view("produtos.index", ['products' => $products]);
+            $this->view(
+                "produtos.index",
+                [
+                    'products' => $products,
+                    'totalPages' => $totalPages,
+                    'currentPage' => $page,
+                    'totalProducts' => $totalProducts,
+                ]
+            );
         }
     }
 
@@ -178,7 +193,7 @@ final class Produtos extends Controller
             // Receber e limpar o ID do produto.
             $productId = filter_var($parameter, FILTER_SANITIZE_NUMBER_INT);
 
-            if(!empty($productId)) {
+            if (!empty($productId)) {
                 // Caso o Id não esteja vazio, buscar o produto.
 
                 // Instanciar a Model de produtos.
@@ -187,7 +202,7 @@ final class Produtos extends Controller
                 // Buscar o produto pelo ID.
                 $productData = $product->getById($productId);
 
-                if($productData) {
+                if ($productData) {
                     // Se o produto foi encontrado, apresentar a view de atualizar produto.
                     $this->view("produtos.update", ['product' => $productData]);
                 } else {
@@ -202,7 +217,7 @@ final class Produtos extends Controller
             } else {
                 ErrorPage::error404("Página não encontrada");
             }
-        } elseif($_SERVER['REQUEST_METHOD'] == "POST") {
+        } elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
             // Receber os dados do formulário.
             $dataForm = filter_input_array(INPUT_POST, FILTER_DEFAULT);
 
@@ -235,7 +250,7 @@ final class Produtos extends Controller
                 // Executar a validação.
                 $validation->validate();
 
-                if(!$validation->fails()) {
+                if (!$validation->fails()) {
                     // A validação NÃO falhou.
 
                     // Instanciar a Model de produto.
@@ -244,7 +259,7 @@ final class Produtos extends Controller
                     // Atualizar o produto.
                     $response = $product->update($dataForm);
 
-                    if($response) {
+                    if ($response) {
                         // Houve resposta da Model, o produto foi atualizado.
 
                         // Retornar uma Sessão com mensagem de sucesso.
@@ -277,14 +292,13 @@ final class Produtos extends Controller
                     // Redirecionar novamente à página atualizar produto.
                     header("Location: {$_ENV['APP_URL']}produtos/update/{$dataForm['id']}");
                 }
-                
             } else {
                 // Token CSRF inválido.
 
                 // Retornar a mensagem de erro + o formulário.
                 $_SESSION['update_product_response_incorrect_form'] = "Erro de segurança do formulário, por favor, recarregue a página e tente novamente";
                 $_SESSION['update_product_response_invalid_form']['form'] = $dataForm;
-                
+
                 // Gerar Log "info".
                 GenerateLog::generateLog("info", "Acesso ao produtos/update/{$parameter} com Token CSRF inválido", ["csrf_token" => $dataForm['csrf_token'] ?? null, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
 

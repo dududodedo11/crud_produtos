@@ -22,6 +22,8 @@ class ReceiveUrlParameters {
         // Dividindo a query (string) em um array.
         parse_str($urlQuery, $queryParams);
 
+        $queryParams = filter_var_array($queryParams, FILTER_SANITIZE_SPECIAL_CHARS);
+
         return $queryParams;
     }
 }
