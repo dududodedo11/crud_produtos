@@ -30,9 +30,9 @@ class PageController {
      */
     public function __construct() {
         // Caso haja alguma rota na url.
-        if(!empty(filter_input(INPUT_GET, "url", FILTER_DEFAULT))) {
+        if(!empty(filter_input(INPUT_GET, "url", FILTER_SANITIZE_SPECIAL_CHARS))) {
             // Recebe a url e coloca em uma variável.
-            $this->url = filter_input(INPUT_GET, "url", FILTER_DEFAULT);
+            $this->url = filter_input(INPUT_GET, "url", FILTER_SANITIZE_SPECIAL_CHARS);
 
             // Limpa a url.
             $this->url = ClearUrl::clearUrl($this->url);

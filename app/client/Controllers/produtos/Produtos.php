@@ -82,7 +82,7 @@ final class Produtos extends Controller
             // Se for POST, é criar para criar um produto.
 
             // Receber e limpar os dados do formulário.
-            $dataForm = filter_input_array(INPUT_POST, FILTER_DEFAULT);
+            $dataForm = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
 
             // Verificar se o token CSRF é válido.
             if (isset($dataForm['csrf_token']) && CSRF::validateCSRFToken("form_create_product", $dataForm['csrf_token'] ?? [])) {
@@ -226,7 +226,7 @@ final class Produtos extends Controller
             }
         } elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
             // Receber os dados do formulário.
-            $dataForm = filter_input_array(INPUT_POST, FILTER_DEFAULT);
+            $dataForm = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
 
             // Verificar se o token CSRF é válido.
             if (isset($dataForm['csrf_token']) && CSRF::validateCSRFToken("form_update_product", $dataForm['csrf_token'] ?? [])) {
@@ -335,7 +335,7 @@ final class Produtos extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
             // Receber os dados do formulário (CSRF e ID a ser deletado).
-            $dataForm = filter_input_array(INPUT_POST, FILTER_DEFAULT);
+            $dataForm = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
 
             if (isset($dataForm['csrf_token']) && CSRF::validateCSRFToken("form_delete_product", $dataForm['csrf_token'] ?? [])) {
                 // Instanciar a classe de validação.

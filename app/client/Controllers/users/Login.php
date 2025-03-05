@@ -54,7 +54,7 @@ class Login extends Controller {
         // Verificação para saber se o verbo HTTP é POST;
         if($_SERVER['REQUEST_METHOD'] == "POST") {
             // Receber todos os dados POST, incluindo o formulário.
-            $dataForm = filter_input_array(INPUT_POST, FILTER_DEFAULT);
+            $dataForm = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
 
             // Receber e guardar o parâmetro "redirect".
             $redirect = $dataForm['redirect'];

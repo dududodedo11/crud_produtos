@@ -42,7 +42,7 @@ final class CadastrarUsuario extends Controller {
         // Verificação para saber se o verbo HTTP é POST;
         if($_SERVER['REQUEST_METHOD'] == "POST") {
             // Receber todos os dados POST, incluindo o formulário.
-            $dataForm = filter_input_array(INPUT_POST, FILTER_DEFAULT);
+            $dataForm = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
 
             // Se existir um token no formulário, ele valida se está correto.
             if(isset($dataForm['csrf_token']) && CSRF::validateCSRFToken("form_create_users", $dataForm['csrf_token'])) {
