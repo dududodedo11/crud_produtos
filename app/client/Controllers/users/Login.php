@@ -160,7 +160,7 @@ class Login extends Controller {
             GenerateLog::generateLog("notice", "Método não suportado em login/login", ['method' => $_SERVER['REQUEST_METHOD'], 'referer' => $referer]);
 
             // Redirecionar para página de erro 404.
-            ErrorPage::error404("Página não encontrada");
+            ErrorPage::error404();
         }
     }
 
@@ -186,7 +186,7 @@ class Login extends Controller {
             GenerateLog::generateLog("notice", "Método não suportado em login/logout", ['method' => $_SERVER['REQUEST_METHOD'], 'user_id' => $_SESSION['user_logged']['id']]);
 
             // Redirecionar para página de erro 404.
-            ErrorPage::error404("Página não encontrada");
+            ErrorPage::error404();
         }
     }
 }

@@ -41,10 +41,10 @@ final class Produtos extends Controller
                 // Carregar a view de produtos/index com o produto específico.
                 $this->view("produtos.product", ['product' => $product]);
             } else {
-                GenerateLog::generateLog("notice", "Sem resposta da Model para buscar produto em produtos/{$parameter}", ["product_id" => $parameter, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
+                GenerateLog::generateLog("notice", "Sem resposta da Model para buscar produto em produtos/{$parameter}", ["product_id" => $parameter, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id'] ?? null]);
 
                 // Redirecionar para página de erro 404.
-                ErrorPage::error404("Página não encontrada");
+                ErrorPage::error404();
             }
         } else {
             $page = ReceiveUrlParameters::receiveUrlParameters("page") ?? 1;
@@ -183,7 +183,7 @@ final class Produtos extends Controller
             GenerateLog::generateLog("info", "Método não suportado em produtos/create", ["method" => $_SERVER['REQUEST_METHOD'], "user_id" => $_SESSION['user_logged']['id']]);
 
             // Redirecionar para página de erro 404.
-            ErrorPage::error404("Página não encontrada");
+            ErrorPage::error404();
         }
     }
 
@@ -216,14 +216,14 @@ final class Produtos extends Controller
                     // Produto não encontrado.
 
                     // Gerar log de "notice".
-                    GenerateLog::generateLog("notice", "Sem resposta da Model para buscar produto em produtos/update/{$parameter}", ["product_id" => $productId, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
+                    GenerateLog::generateLog("notice", "Sem resposta da Model para buscar produto em produtos/update/{$parameter}", ["product_id" => $productId, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id'] ?? null]);
 
                     // Redirecionar para a página de erro 404.
-                    ErrorPage::error404("Página não encontrada");
+                    ErrorPage::error404();
                 }
             } else {
                 // Redirecionar para a página de erro 404.
-                ErrorPage::error404("Página não encontrada");
+                ErrorPage::error404();
             }
         } elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
             // Receber os dados do formulário.
@@ -284,7 +284,7 @@ final class Produtos extends Controller
                         $_SESSION['update_product_response_invalid_form']['form'] = $dataForm;
 
                         // Gerar log "notice".
-                        GenerateLog::generateLog("notice", "Sem resposta da Model para atualização de produtos em produtos/update/{$parameter}", ["form" => $dataForm, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
+                        GenerateLog::generateLog("notice", "Sem resposta da Model para atualização de produtos em produtos/update/{$parameter}", ["form" => $dataForm, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id'] ?? null]);
 
                         // Redirecionar novamente à página de atualizar produto.
                         header("Location: {$_ENV['APP_URL']}produtos/update/{$dataForm['id']}");
@@ -296,7 +296,7 @@ final class Produtos extends Controller
                     $_SESSION['update_product_response_invalid_form'] = ["form" => $dataForm, "errors" => $validation->errors()->firstOfAll()];
 
                     // Gerar Log "debug".
-                    GenerateLog::generateLog("debug", "Validação Rakit em produtos/update/{$parameter} falhou", ["form" => $dataForm, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id'], "errors" => $validation->errors()->firstOfAll()]);
+                    GenerateLog::generateLog("debug", "Validação Rakit em produtos/update/{$parameter} falhou", ["form" => $dataForm, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id'] ?? null, "errors" => $validation->errors()->firstOfAll()]);
 
                     // Redirecionar novamente à página atualizar produto.
                     header("Location: {$_ENV['APP_URL']}produtos/update/{$dataForm['id']}");
@@ -309,7 +309,7 @@ final class Produtos extends Controller
                 $_SESSION['update_product_response_invalid_form']['form'] = $dataForm;
 
                 // Gerar Log "info".
-                GenerateLog::generateLog("info", "Acesso ao produtos/update/{$parameter} com Token CSRF inválido", ["csrf_token" => $dataForm['csrf_token'] ?? null, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
+                GenerateLog::generateLog("info", "Acesso ao produtos/update/{$parameter} com Token CSRF inválido", ["csrf_token" => $dataForm['csrf_token'] ?? null, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id'] ?? null]);
 
                 // Redirecionar novamente à página criar atualizar produto.
                 header("Location: {$_ENV['APP_URL']}produtos/update/{$dataForm['id']}");
@@ -318,10 +318,10 @@ final class Produtos extends Controller
             // Método não suportado.
 
             // Gerar Log "info".
-            GenerateLog::generateLog("info", "Acesso ao produtos/update/{$parameter} com método não suportado", ["method" => $_SERVER['REQUEST_METHOD'], "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
+            GenerateLog::generateLog("info", "Acesso ao produtos/update/{$parameter} com método não suportado", ["method" => $_SERVER['REQUEST_METHOD'], "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id'] ?? null]);
 
             // Redirecionar para página de erro 404.
-            ErrorPage::error404("Página não encontrada");
+            ErrorPage::error404();
         }
     }
 
@@ -377,7 +377,7 @@ final class Produtos extends Controller
                         // Não houve resposta da Model: Falha no DELETE.
 
                         // Gerar Log "notice".
-                        GenerateLog::generateLog("notice", "Sem resposta da Model para deletar produto em produtos/delete/{$parameter}", ["form" => $dataForm, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
+                        GenerateLog::generateLog("notice", "Sem resposta da Model para deletar produto em produtos/delete/{$parameter}", ["form" => $dataForm, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id'] ?? null]);
 
                         // Redirecionar para página de erro 500.
                         ErrorPage::error500();
@@ -386,7 +386,7 @@ final class Produtos extends Controller
                     // Validação falhou.
 
                     // Gerar um Log "debug".
-                    GenerateLog::generateLog("debug", "Validação Rakit em produtos/delete falhou", ["form" => $dataForm, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
+                    GenerateLog::generateLog("debug", "Validação Rakit em produtos/delete falhou", ["form" => $dataForm, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id'] ?? null]);
 
                     // Redirecionar para página de erro 500.
                     ErrorPage::error500();
@@ -395,7 +395,7 @@ final class Produtos extends Controller
                 // Token CSRF inválido.
 
                 // Gerar Log "info".
-                GenerateLog::generateLog("info", "Acesso ao produtos/delete com Token CSRF inválido", ["csrf_token" => $dataForm['csrf_token'] ?? null, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
+                GenerateLog::generateLog("info", "Acesso ao produtos/delete com Token CSRF inválido", ["csrf_token" => $dataForm['csrf_token'] ?? null, "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id'] ?? null]);
 
                 // Redirecionar para página de erro 500.
                 ErrorPage::error500();
@@ -404,10 +404,10 @@ final class Produtos extends Controller
             // Método não suportado.
 
             // Gerar Log "info".
-            GenerateLog::generateLog("info", "Acesso ao produtos/delete com método não suportado", ["method" => $_SERVER['REQUEST_METHOD'], "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id']]);
+            GenerateLog::generateLog("info", "Acesso ao produtos/delete com método não suportado", ["method" => $_SERVER['REQUEST_METHOD'], "uri" => $_SERVER['REQUEST_URI'], "user_id" => $_SESSION['user_logged']['user_id'] ?? null]);
 
             // Redirecionar para página de erro 404.
-            ErrorPage::error404("Página não encontrada");
+            ErrorPage::error404();
         }
     }
 }

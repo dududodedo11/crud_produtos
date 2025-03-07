@@ -3,7 +3,3 @@ Como usar os difrentes ambientes de desenvolvimento no composer
 Ver short tags do php
 
 Dropdown no navbar
-
-Arrumar os links da página home
-
-Melhorar Páginas de erro.

@@ -17,10 +17,10 @@
         <h1 class="mb-3">Página Inicial</h1>
         <h2>Links Úteis:</h2>
         <ul>
-            <li><a href="<?php echo $view->linkAsset("login") ?>">Login</a></li>
-            <li><a href="<?php echo $view->linkAsset("cadastrar-usuario") ?>">Cadastrar Usuário</a></li>
-            <li><a href="<?php echo $view->linkAsset("produtos") ?>">Todos os produtos</a></li>
-            <li><a href="<?php echo $view->linkAsset("produtos/create") ?>">Novo Produto</a></li>
+            <li><a href="<?php echo $view->linkPage("login") ?>">Login</a></li>
+            <li><a href="<?php echo $view->linkPage("cadastrar-usuario") ?>">Cadastrar Usuário</a></li>
+            <li><a href="<?php echo $view->linkPage("produtos") ?>">Todos os produtos</a></li>
+            <li><a href="<?php echo $view->linkPage("produtos/create") ?>">Novo Produto</a></li>
         </ul>
     </div>
 

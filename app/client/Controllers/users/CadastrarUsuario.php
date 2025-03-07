@@ -126,7 +126,7 @@ final class CadastrarUsuario extends Controller {
             GenerateLog::generateLog("notice", "Tentativa de acesso a página (POST) de cadastrar-usuario/create com método não suportado.", ['method' => $_SERVER['REQUEST_METHOD']]);
 
             // Redirecionar para página de erro 404.
-            ErrorPage::error404("Página não encontrada");
+            ErrorPage::error404();
         }
     }
 }
