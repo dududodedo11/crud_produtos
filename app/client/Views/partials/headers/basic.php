@@ -2,6 +2,7 @@
 
 // Usar os métodos padrões da View.
 use Client\Views\Services\View;
+
 $view = new View;
 
 ?>

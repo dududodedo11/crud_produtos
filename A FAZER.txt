@@ -8,4 +8,4 @@ Arrumar os links da página home
 
 Melhorar a classe ReceiveUrlParameters
 
-Melhorar as views com o "blade" do próprio php + identação.
+Melhorar Páginas de erro.

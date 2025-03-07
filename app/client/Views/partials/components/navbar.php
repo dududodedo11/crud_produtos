@@ -35,9 +35,9 @@ $view = new View;
         </div>
 
         <?php if (isset($_SESSION['user_logged'])): ?>
-        <form action="<?php echo $_ENV['APP_URL'] ?>login/delete" method="POST" class="float-end border border-1 rounded d-inline">
-            <button type="submit" class="btn text-white d-inline" style="font-size: 17px;"><i class="fa-solid fa-arrow-left"></i> Sair</button>
-        </form>
+            <form action="<?php echo $_ENV['APP_URL'] ?>login/delete" method="POST" class="float-end border border-1 rounded d-inline">
+                <button type="submit" class="btn text-white d-inline" style="font-size: 17px;"><i class="fa-solid fa-arrow-left"></i> Sair</button>
+            </form>
         <?php endif; ?>
     </div>
 </nav>
