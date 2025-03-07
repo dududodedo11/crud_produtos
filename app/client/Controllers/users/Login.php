@@ -29,7 +29,7 @@ class Login extends Controller {
      */
     public function index(string|null $parameter) {
         // Receber o parâmetro "redirect" OU a página inicial.
-        $redirect = ReceiveUrlParameters::receiveUrlParameters()['redirect'] ?? $_ENV['APP_URL'];
+        $redirect = ReceiveUrlParameters::receiveUrlParameters("redirect") ?? $_ENV['APP_URL'];
 
         // Se a variável $redirect não for igual a URL base, então, crie a variável de aviso.
         if($redirect != $_ENV['APP_URL']) {

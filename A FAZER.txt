@@ -6,6 +6,4 @@ Dropdown no navbar
 
 Arrumar os links da página home
 
-Melhorar a classe ReceiveUrlParameters
-
 Melhorar Páginas de erro.

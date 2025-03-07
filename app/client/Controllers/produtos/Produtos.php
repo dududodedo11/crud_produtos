@@ -47,7 +47,7 @@ final class Produtos extends Controller
                 ErrorPage::error404("Página não encontrada");
             }
         } else {
-            $page = ReceiveUrlParameters::receiveUrlParameters()["page"] ?? 1;
+            $page = ReceiveUrlParameters::receiveUrlParameters("page") ?? 1;
             $limit = 12;
 
             $productModel = new Product;

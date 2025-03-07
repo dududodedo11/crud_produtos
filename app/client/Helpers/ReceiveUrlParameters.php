@@ -11,7 +11,7 @@ class ReceiveUrlParameters {
      *
      * @return void
      */
-    public static function receiveUrlParameters()
+    public static function receiveUrlParameters(string $parameter = "")
     {
         // Receber a url e dividir as partes.
         $parseUrlLogin = parse_url($_SERVER['REQUEST_URI']);
@@ -23,6 +23,10 @@ class ReceiveUrlParameters {
         parse_str($urlQuery, $queryParams);
 
         $queryParams = filter_var_array($queryParams, FILTER_SANITIZE_SPECIAL_CHARS);
+
+        if ($parameter) {
+            return $queryParams[$parameter] ?? null;
+        }
 
         return $queryParams;
     }
