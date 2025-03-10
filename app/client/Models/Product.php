@@ -134,6 +134,33 @@ final class Product extends Model
     }
 
     /**
+     * Faz uma busca de produtos pelo nome.
+     * Não retorna um em específico, mas um array de produtos que contenham o nome.
+     *
+     * @param string $name É o nome que será buscado.
+     * @return array São retornados os produtos que possuam o nome.
+     */
+    public function searchByName(string $name):array {
+        // Tentativa de consulta com try-catch.
+        try {
+            // Fazendo consulta PDO.
+            $query = "SELECT id, user_id, name, code, quantity, description FROM products WHERE name LIKE :name AND user_id = :user_id";
+            $stmt = $this->getConnection()->prepare($query);
+
+            $stmt->bindValue(':name', "%" . $name . "%", PDO::PARAM_STR);
+            $stmt->bindValue(':user_id', $_SESSION['user_logged']['id'], PDO::PARAM_INT);
+
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // Gera um log sério de erro na consulta SQL.
+            $this->generateBasicLog(MODEL_NAME, $query, $e->getMessage(), null);
+            return [];
+        }
+    }
+
+    /**
      * Deleta um produto do banco de dados.
      *
      * @param int $id É o ID do produto que será deletado.

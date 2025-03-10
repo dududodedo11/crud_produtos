@@ -31,6 +31,13 @@ use Client\Helpers\CSRF;
                     </select>
                 </div>
                 <div class="card-body" id="ProductsTable">
+
+                    <form action="" class="w-100  d-flex align-items-center justify-content-center mb-3" method="get" id="formSearchProduct">
+                        <input type="text" name="search" id="SearchNameProduct" class="form-control" placeholder="Pesquisar produto pelo nome" style="width: 350px; margin-right: 10px;" value="<?php echo $data['search'] ?? "" ?>">
+
+                        <button type="submit" class="btn btn-primary" style="width: 70px;" title="Pesquisar"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </form>
+
                     <table class="table table-dark table-striped">
                         <thead>
                             <tr>
@@ -66,21 +73,21 @@ use Client\Helpers\CSRF;
                     <nav aria-label="Page navigation" class="">
                         <ul class="pagination justify-content-center">
                             <li class="page-item <?php echo $data['currentPage'] == 1 ? 'disabled' : ''; ?>">
-                                <a href="<?php echo $_ENV['APP_URL'] . "produtos?page=" . ($data['currentPage'] - 1) . "&limit=" . ($data['limit']) . "#ProductsTable"; ?>" class="page-link">Anterior</a>
+                                <a href="<?php echo $_ENV['APP_URL'] . "produtos?page=" . ($data['currentPage'] - 1) . "&limit=" . ($data['limit']) . "&search=" . $data['search'] . "#ProductsTable"; ?>" class="page-link">Anterior</a>
                             </li>
 
                             <?php for ($i = 1; $i <= $data['totalPages']; $i++): ?>
                                 <li class="page-item <?php echo $data['currentPage'] == $i ? 'active' : ''; ?>">
-                                    <a class="page-link" href="<?php echo $_ENV['APP_URL'] . "produtos?page=" . $i . "&limit=" . ($data['limit']) . "#ProductsTable"; ?>"><?php echo $i; ?></a>
+                                    <a class="page-link" href="<?php echo $_ENV['APP_URL'] . "produtos?page=" . $i . "&limit=" . ($data['limit']) . "&search=" . $data['search'] . "#ProductsTable"; ?>"><?php echo $i; ?></a>
                                 </li>
                             <?php endfor; ?>
 
                             <li class="page-item <?php echo $data['currentPage'] == $data['totalPages'] ? 'disabled' : ''; ?>">
-                                <a href="<?php echo $_ENV['APP_URL'] . "produtos?page=" . ($data['currentPage'] + 1) . "&limit=" . ($data['limit']) . "#ProductsTable"; ?>" class="page-link">Próximo</a>
+                                <a href="<?php echo $_ENV['APP_URL'] . "produtos?page=" . ($data['currentPage'] + 1) . "&limit=" . $data['limit'] . "&search=" . $data['search'] . "#ProductsTable"; ?>" class="page-link">Próximo</a>
                             </li>
                         </ul>
                     </nav>
-                    <p class="text-center text-info">Você tem um total de <?php echo $data['totalProducts']; ?> produtos!</p>
+                    <p class="text-center text-info"><?php echo $data['search'] == "" ? "Você tem um total de {$data['totalProducts']} produto(s)." : "Foi encontrado um total de {$data['totalProducts']} produto(s)." ?></p>
                 </div>
             </div>
         </div>

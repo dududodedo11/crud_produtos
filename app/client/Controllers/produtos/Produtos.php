@@ -49,29 +49,39 @@ final class Produtos extends Controller
             // Receber parâmetros opcionais da página.
             $page = ReceiveUrlParameters::receiveUrlParameters("page") ?? 1;
             $limit = ReceiveUrlParameters::receiveUrlParameters("limit") ?? 12;
+            $search = ReceiveUrlParameters::receiveUrlParameters("search") ?? "";
 
             // Instanciar a Model de produtos.
             $productModel = new Product;
 
             // Contar a quantidade total de produtos (para fazer o cálculo de páginas).
-            $totalProducts = count($productModel->all());
+            if($search != "") {
+                // Se há algo para pesquisar, buscar os produtos que correspondam à pesquisa.
+
+                $products = $productModel->searchByName($search);
+
+                $totalProducts = count($products);
+            } else {
+                // Se não há nada para pesquisar, retornar todos os produtos.
+
+                $products = $productModel->paginate($page, $limit);
+
+                $totalProducts = count($productModel->all());
+            }
 
             // Calcular o número total de páginas (para criar os links de navegação).
             $totalPages = ceil($totalProducts / $limit);
 
             // Verificar se a página atual é maior que o total de páginas.
             if ($page > $totalPages && $totalPages > 0) {
-                // Redirecionar para a última página.
+                // Redirecionar para a última página possível.
                 header("Location: {$_ENV['APP_URL']}produtos?page={$totalPages}&limit={$limit}");
 
                 // Encerrar o script.
                 exit;
             }
 
-            // Buscar os produtos da página requisitada e com limites definidos.
-            $products = $productModel->paginate($page, $limit);
-
-            // Carregar a view de produtos/index com a lista de produtos e enviar as informações de paginação.
+            // Carregar a view de produtos/index enviando a lista de produtos, as informações de paginação e outros.
             $this->view(
                 "produtos.index",
                 [
@@ -80,6 +90,7 @@ final class Produtos extends Controller
                     'currentPage' => $page,
                     'totalProducts' => $totalProducts,
                     'limit' => $limit,
+                    'search' => $search,
                 ]
             );
         }
