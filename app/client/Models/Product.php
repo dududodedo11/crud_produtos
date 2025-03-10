@@ -38,11 +38,19 @@ final class Product extends Model
         }
     }
 
+    /**
+     * Retorna um array de produtos baseado na página requisitada e no limite definido.
+     * É a função de paginação.
+     *
+     * @param integer $page É a página requisitada.
+     * @param integer $limit É o limite de produtos por página.
+     * @return array São retornados todos os produtos da página requisitada.
+     */
     public function paginate(int $page, int $limit):array
     {
         // Tentativa de consulta com try-catch.
         try {
-            $ofsset = ($page - 1) * 10;
+            $offset = ($page - 1) * $limit;
 
             // Fazendo consulta PDO.
             $query = "SELECT id, user_id, name, code, quantity, description 
@@ -53,7 +61,7 @@ final class Product extends Model
             $stmt = $this->getConnection()->prepare($query);
 
             $stmt->bindValue(':user_id', $_SESSION['user_logged']['id'], PDO::PARAM_INT);
-            $stmt->bindValue(':offset', (int) $ofsset, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
             $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
 
             $stmt->execute();

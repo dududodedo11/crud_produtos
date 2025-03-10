@@ -25,11 +25,10 @@ use Client\Helpers\CSRF;
                 <div class="card-header d-flex align-items-center">
                     <a href="<?php echo $view->linkPage("produtos/create") ?>" class="btn btn-primary" style="margin-right: 10px">Novo Produto</a>
                     <select name="products_limit" id="ProductsLimit" class="form-control" style="display: inline !important; width: min-content">
-                        <option value="12" selected>12 p/ página</option>
-                        <option value="15">15 p/ página</option>
-                        <option value="20">20 p/ página</option>
+                        <option value="12" <?php echo ($data['limit'] == 12) ? "selected" : "" ?>>12 p/ página</option>
+                        <option value="15" <?php echo ($data['limit'] == 15) ? "selected" : "" ?>>15 p/ página</option>
+                        <option value="20" <?php echo ($data['limit'] == 20) ? "selected" : "" ?>>20 p/ página</option>
                     </select>
-
                 </div>
                 <div class="card-body" id="ProductsTable">
                     <table class="table table-dark table-striped">
@@ -67,17 +66,17 @@ use Client\Helpers\CSRF;
                     <nav aria-label="Page navigation" class="">
                         <ul class="pagination justify-content-center">
                             <li class="page-item <?php echo $data['currentPage'] == 1 ? 'disabled' : ''; ?>">
-                                <a href="<?php echo $_ENV['APP_URL'] . "produtos?page=" . $data['currentPage'] - 1 . "#ProductsTable"; ?>" class="page-link">Anterior</a>
+                                <a href="<?php echo $_ENV['APP_URL'] . "produtos?page=" . ($data['currentPage'] - 1) . "&limit=" . ($data['limit']) . "#ProductsTable"; ?>" class="page-link">Anterior</a>
                             </li>
 
                             <?php for ($i = 1; $i <= $data['totalPages']; $i++): ?>
                                 <li class="page-item <?php echo $data['currentPage'] == $i ? 'active' : ''; ?>">
-                                    <a class="page-link" href="<?php echo $_ENV['APP_URL'] . "produtos?page=" . $i . "#ProductsTable"; ?>"><?php echo $i; ?></a>
+                                    <a class="page-link" href="<?php echo $_ENV['APP_URL'] . "produtos?page=" . $i . "&limit=" . ($data['limit']) . "#ProductsTable"; ?>"><?php echo $i; ?></a>
                                 </li>
                             <?php endfor; ?>
 
                             <li class="page-item <?php echo $data['currentPage'] == $data['totalPages'] ? 'disabled' : ''; ?>">
-                                <a href="<?php echo $_ENV['APP_URL'] . "produtos?page=" . $data['currentPage'] + 1 . "#ProductsTable"; ?>" class="page-link">Próximo</a>
+                                <a href="<?php echo $_ENV['APP_URL'] . "produtos?page=" . ($data['currentPage'] + 1) . "&limit=" . ($data['limit']) . "#ProductsTable"; ?>" class="page-link">Próximo</a>
                             </li>
                         </ul>
                     </nav>

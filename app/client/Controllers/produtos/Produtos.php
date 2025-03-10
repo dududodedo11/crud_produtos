@@ -20,7 +20,6 @@ final class Produtos extends Controller
         $url = $_ENV['APP_URL'] . filter_input(INPUT_GET, "url", FILTER_SANITIZE_URL);
         VerifyLogin::redirect($url);
     }
-
     /**
      * Função correspondente a produtos/index ou produtos/{id}.
      * Apresenta a lista de produtos ou um produto específico.
@@ -47,16 +46,32 @@ final class Produtos extends Controller
                 ErrorPage::error404();
             }
         } else {
+            // Receber parâmetros opcionais da página.
             $page = ReceiveUrlParameters::receiveUrlParameters("page") ?? 1;
-            $limit = 12;
+            $limit = ReceiveUrlParameters::receiveUrlParameters("limit") ?? 12;
 
+            // Instanciar a Model de produtos.
             $productModel = new Product;
-            $products = $productModel->paginate($page, $limit);
 
+            // Contar a quantidade total de produtos (para fazer o cálculo de páginas).
             $totalProducts = count($productModel->all());
+
+            // Calcular o número total de páginas (para criar os links de navegação).
             $totalPages = ceil($totalProducts / $limit);
 
-            // Carregar a view de produtos/index com a lista de produtos.
+            // Verificar se a página atual é maior que o total de páginas.
+            if ($page > $totalPages && $totalPages > 0) {
+                // Redirecionar para a última página.
+                header("Location: {$_ENV['APP_URL']}produtos?page={$totalPages}&limit={$limit}");
+
+                // Encerrar o script.
+                exit;
+            }
+
+            // Buscar os produtos da página requisitada e com limites definidos.
+            $products = $productModel->paginate($page, $limit);
+
+            // Carregar a view de produtos/index com a lista de produtos e enviar as informações de paginação.
             $this->view(
                 "produtos.index",
                 [
@@ -64,11 +79,11 @@ final class Produtos extends Controller
                     'totalPages' => $totalPages,
                     'currentPage' => $page,
                     'totalProducts' => $totalProducts,
+                    'limit' => $limit,
                 ]
             );
         }
     }
-
     /**
      * Função correspondente a produtos/create.
      * Apresenta a view de criar produto ou cria um produto, dependendo do método.
