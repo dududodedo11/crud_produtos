@@ -20,6 +20,8 @@ use Client\Helpers\CSRF;
     <main class="container">
         <div class="card">
             <div class="card-header">
+                <div class="float-start" id="previousPage"></div>
+                
                 <div class="float-end">
                     <a href="<?php echo $_ENV['APP_URL'] . "produtos/update/" . $data['product']['id'] ?>" class="btn btn-primary mx-1">Editar</a>
                     <form action="<?php echo $_ENV['APP_URL'] ?>produtos/delete" method="post" class="d-inline">
@@ -67,6 +69,7 @@ use Client\Helpers\CSRF;
     </main>
 
     <?php $view->component("bootstrapjs") ?>
+    <script src="<?php echo $view->linkAsset("js/produtos/product.js") ?>"></script>
     <?php
     unset($_SESSION['update_product_response_success']);
     ?>
