@@ -23,6 +23,9 @@ $view = new View;
                 <li class="nav-item">
                     <a class="nav-link" href="<?php echo $view->linkPage("produtos") ?>">Produtos</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo $view->linkPage("produtos") ?>">Novo Produto</a>
+                </li>
                 <?php if (!isset($_SESSION['user_logged'])): ?>
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo $view->linkPage("cadastrar-usuario") ?>">Cadastrar Usuário</a>

@@ -17,7 +17,7 @@ use Client\Helpers\CSRF;
 
 <body class="bg-body-tertiary">
     <?php $view->component("navbar") ?>
-    <main class="container">
+    <main class="container mb-2">
         <div class="container">
             <p class="text-center text-success"><?php echo $_SESSION['delete_product_response_success'] ?? "" ?></p>
             <h1>Lista de produtos</h1>
