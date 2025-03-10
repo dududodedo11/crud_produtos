@@ -51,3 +51,7 @@ Require all denied
 <FilesMatch "^phinx.php$">
     Require all denied
 </FilesMatch>
+
+<FilesMatch "^README.md$">
+    Require all denied
+</FilesMatch>
