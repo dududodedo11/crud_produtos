@@ -3,3 +3,7 @@ Como usar os difrentes ambientes de desenvolvimento no composer
 Ver short tags do php
 
 Dropdown no navbar
+
+Criar barra de pesquisa em produtos/index
+
+Criar opção de qt. de produtos p/ página na lista de produtos.

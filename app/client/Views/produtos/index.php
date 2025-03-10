@@ -22,8 +22,14 @@ use Client\Helpers\CSRF;
             <p class="text-center text-success"><?php echo $_SESSION['delete_product_response_success'] ?? "" ?></p>
             <h1>Lista de produtos</h1>
             <div class="card">
-                <div class="card-header">
-                    <a href="<?php echo $view->linkPage("produtos/create") ?>" class="btn btn-primary float-right">Novo Produto</a>
+                <div class="card-header d-flex align-items-center">
+                    <a href="<?php echo $view->linkPage("produtos/create") ?>" class="btn btn-primary" style="margin-right: 10px">Novo Produto</a>
+                    <select name="products_limit" id="ProductsLimit" class="form-control" style="display: inline !important; width: min-content">
+                        <option value="12" selected>12 p/ página</option>
+                        <option value="15">15 p/ página</option>
+                        <option value="20">20 p/ página</option>
+                    </select>
+
                 </div>
                 <div class="card-body" id="ProductsTable">
                     <table class="table table-dark table-striped">
@@ -83,6 +89,7 @@ use Client\Helpers\CSRF;
 
 
     <?php $view->component("bootstrapjs") ?>
+    <script src="<?php echo $view->linkAsset("js/produtos/index.js") ?>"></script>
     <?php
     unset($_SESSION['delete_product_response_success']);
     ?>
