@@ -1,6 +1,6 @@
 # Projeto de C.R.U.D. de produtos
 
-# Descrição da ideia:
+## Descrição da ideia:
 O projeto consiste em um CRUD (Create (Criar), Read (Ler), Update (Atualizar), Delete (Deletar)) de produtos.
 
 Mas o que torna esse projeto diferente é que ele foi desenvolvido pensando em um sistema completo, com divisão de views, controllers, models, etc.
