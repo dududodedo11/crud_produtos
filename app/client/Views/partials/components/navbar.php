@@ -24,7 +24,13 @@ $view = new View;
                     <a class="nav-link" href="<?php echo $view->linkPage("produtos") ?>">Produtos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo $view->linkPage("produtos") ?>">Novo Produto</a>
+                    <a class="nav-link" href="<?php echo $view->linkPage("produtos/create") ?>">Novo Produto</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-info" href="<?php echo $view->linkPage("gerador-de-faltas") ?>">Gerador de Faltas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo $view->linkPage("configuracoes") ?>">Configurações</a>
                 </li>
                 <?php if (!isset($_SESSION['user_logged'])): ?>
                     <li class="nav-item">

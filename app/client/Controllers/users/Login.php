@@ -174,8 +174,10 @@ class Login extends Controller {
     public function delete(string|null $parameter) {
         // Verificar se o método é POST.
         if($_SERVER['REQUEST_METHOD'] == "POST") {
-            // Deletar a sessão do usuário.
-            unset($_SESSION['user_logged']);
+            // Deletar a sessão completamente.
+            session_unset();
+
+            session_destroy();
 
             // Redirecionar para página inicial.
             header("Location: {$_ENV['APP_URL']}");

@@ -1,0 +1,9 @@
+Criar o salvamento do token API Bling no Banco de dados.
+
+Criar relacionamento 1 x 1 entre o token e o usuário.
+
+Criar a lógia do refresh_token da API BLing.
+
+Inserir o mesmo sistema de redirect do login no cadastrar usuário.
+
+Salvar o login mesmo no cadastrar usuário.
