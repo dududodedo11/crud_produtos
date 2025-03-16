@@ -58,6 +58,7 @@ use Client\Helpers\CSRF;
     </main>
 
     <?php $view->component("bootstrapjs") ?>
+    
     <?php 
     unset($_SESSION['api_bling_response_invalid_form']);
     unset($_SESSION['api_bling_response_incorrect_form']);

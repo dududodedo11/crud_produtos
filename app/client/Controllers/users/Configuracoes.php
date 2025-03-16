@@ -23,8 +23,10 @@ final class Configuracoes extends Controller
 
     public function index(string|null $parameter)
     {
+        // Enviar se o usuário está autheticado na API ou não.
         $user_api_bling = isset($_SESSION['bling_auth']) ? true : false;
 
+        // Chamar a view de configurações.
         $this->view("users.configuracoes", [
             "user_api_bling" => $user_api_bling
         ]);
