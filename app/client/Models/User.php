@@ -69,7 +69,7 @@ final class User extends Model {
 
     public function getUser(string $username):array|bool {
         try {
-            $query = "SELECT id, username, password FROM users WHERE username = :username";
+            $query = "SELECT id, username, password FROM users WHERE BINARY username = :username";
             $stmt = $this->getConnection()->prepare($query);
 
             $stmt->bindValue(":username", $username, PDO::PARAM_STR);

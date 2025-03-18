@@ -26,12 +26,6 @@ $view = new View;
                 <li class="nav-item">
                     <a class="nav-link" href="<?php echo $view->linkPage("produtos/create") ?>">Novo Produto</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-info" href="<?php echo $view->linkPage("gerador-de-faltas") ?>">Gerador de Faltas</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?php echo $view->linkPage("configuracoes") ?>">Configurações</a>
-                </li>
                 <?php if (!isset($_SESSION['user_logged'])): ?>
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo $view->linkPage("cadastrar-usuario") ?>">Cadastrar Usuário</a>

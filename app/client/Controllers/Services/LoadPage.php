@@ -31,9 +31,6 @@ class loadPage
         "Produtos",
         "CadastrarUsuario",
         "Login",
-        "GeradorDeFaltas",
-        "Configuracoes",
-        "ApiBling"
     ];
 
     /** Guarda a lista de pastas de controllers disponíveis. @var array */
@@ -41,8 +38,6 @@ class loadPage
         "home",
         "produtos",
         "users",
-        "gerador_de_faltas",
-        "api",
     ];
 
     /**

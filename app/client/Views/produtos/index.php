@@ -3,6 +3,8 @@
 
 use Client\Helpers\CSRF;
 
+$csrf_token = CSRF::generateCSRFToken("form_delete_product");
+
 ?>
 
 <!DOCTYPE html>
@@ -59,7 +61,7 @@ use Client\Helpers\CSRF;
                                         <a href="<?php echo $_ENV['APP_URL'] . "produtos/index/" . $product['id'] ?>" class="btn btn-primary">Detalhes</a>
                                         <a href="<?php echo $_ENV['APP_URL'] . "produtos/update/" . $product['id'] ?>" class="btn btn-secondary">Editar</a>
                                         <form action="<?php echo $_ENV['APP_URL'] ?>produtos/delete" method="post" class="d-inline">
-                                            <input type="hidden" name="csrf_token" value="<?php echo CSRF::generateCSRFToken("form_delete_product"); ?>">
+                                            <input type="hidden" name="csrf_token" value="<?php echo $csrf_token ?>">
                                             <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
                                             <button class="btn btn-danger" type="submit">Deletar</button>
                                         </form>
